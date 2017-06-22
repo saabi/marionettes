@@ -17,6 +17,7 @@ let tmpVec3 = new Vec3;
 let tmp1Vec3 = new Vec3;
 let vel = new Vec3;
 class Node {
+  name: string;
   pos: Vec3;
   old: Vec3;
   radius: number;
@@ -24,7 +25,8 @@ class Node {
   rgb: Vec3;
   free: boolean;
 
-  constructor(node: NodeParams) {
+  constructor(name: string, node: NodeParams) {
+      this.name = name;
       this.pos = new Vec3(node.x, node.y, node.z);
       this.old = new Vec3(node.x, node.y, node.z);
       this.radius = Math.pow(node.w, 1/3)/15;
@@ -307,7 +309,7 @@ export function init(struct: Struct) {
   theStruct = struct;
   // load nodes
   for (let n in struct.nodes) {
-    const node = new Node(struct.nodes[n]);
+    const node = new Node(n, struct.nodes[n]);
     struct.nodes[n].id = node;
     nodes.push(node);
   }
