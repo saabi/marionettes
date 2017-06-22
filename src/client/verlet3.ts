@@ -1,5 +1,7 @@
 import {WebGL, Vec3, Mat4, Canvas, Pointer, Shader} from 'WebGLFramework';
 
+const friction = 0.001;
+
 interface NodeParams {
   x: number;
   y: number;
@@ -12,6 +14,7 @@ interface NodeParams {
 }
 // Node class
 let tmpVec3 = new Vec3;
+let tmp1Vec3 = new Vec3;
 let vel = new Vec3;
 class Node {
   pos: Vec3;
@@ -37,7 +40,8 @@ class Node {
       const acc = -9.81; 
       //const acc = 0; 
       tmpVec3.copy(this.pos);
-      this.pos.mul(2).sub(this.old);
+      tmp1Vec3.copy(this.old).mul(1-friction);
+      this.pos.mul(2-friction).sub(tmp1Vec3);
       this.pos.y += acc*dt*dt;
       this.old.copy(tmpVec3);
     }
@@ -319,3 +323,7 @@ export function init(struct: Struct) {
   nodes[3].pos.z += 0.01;
   run(0);
 }
+
+window.setFriction = function (f) { friction = f; }
+window.getFriction = function () {return friction};
+
