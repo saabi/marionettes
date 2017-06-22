@@ -101,14 +101,14 @@ const struct:Struct = {
     s2: {
       x: 0,
       y: 0.88-1,
-      z: 0.04,
+      z: -0.05,
       w: 0.03,
       mass: 1.0,
       color: [1.5, 1.2, 0.8]
     },
     s3: {
       x: 0,
-      y: 0.84-1,
+      y: 0.75-1,
       z: 0,
       w: 0.03,
       mass: 1.0,
@@ -116,7 +116,7 @@ const struct:Struct = {
     },
     s4: {
       x: 0,
-      y: 0.6-1,
+      y: 0.64-1,
       z: 0,
       w: 0.03,
       mass: 1.0,
@@ -124,7 +124,7 @@ const struct:Struct = {
     },
     s5: {
       x: 0,
-      y: 0.56-1,
+      y: 0.58-1,
       z: 0.04,
       w: 0.03,
       mass: 1.0,
@@ -204,7 +204,7 @@ const struct:Struct = {
     },
     lankle: {
       x: 0.06,
-      y: 0-1,
+      y: 0.1-1,
       z: 0,
       w: 0.03,
       mass: 1.0,
@@ -228,7 +228,7 @@ const struct:Struct = {
     },
     rankle: {
       x: -0.06,
-      y: 0-1,
+      y: 0.1-1,
       z: 0,
       w: 0.03,
       mass: 1.0,
@@ -288,8 +288,8 @@ function createString(struct: Struct, sections:number, name: string, attachTo: s
         x: interpolate(x, destNode.x, p),
         y: interpolate(y, destNode.y, p),
         z: interpolate(z, destNode.z, p),
-        w: 0.003,
-        mass: 0.01,
+        w: 0.001,
+        mass: 1,
         color: [0.8, 1.2, 1.5],
         };
         struct.constraints.push([name+i, name+(i+1), 0.005]);
@@ -298,8 +298,8 @@ function createString(struct: Struct, sections:number, name: string, attachTo: s
     struct.constraints[struct.constraints.length-1][1] = attachTo;
 }
 
-createString(struct, 15, 'shead', 'head', 0, 1.5, 0);
-createString(struct, 15, 'slwrist', 'lwrist', -.13, 1.02, 0);
-createString(struct, 15, 'srwrist', 'rwrist', .13, 1.02, 0);
+createString(struct, 30, 'ropehead', 'head', 0, 1.5, 0);
+createString(struct, 30, 'ropelwrist', 'lwrist', -.13, 1.02, 0);
+createString(struct, 30, 'roperwrist', 'rwrist', .13, 1.02, 0);
 
 init(struct);
