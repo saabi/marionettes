@@ -1,0 +1,11 @@
+{
+	apps : [{
+		name : 'culturanomade',
+		script : 'lib/server.js',
+		watch : false,
+                env : {
+                        "PORT" : "1665"
+                }
+	}]
+}
+
