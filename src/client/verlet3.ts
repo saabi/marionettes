@@ -164,7 +164,7 @@ class Constraint {
           dragFreeness = drag.free;
           drag.free = false;
           rgb.copy(drag.rgb);
-          if (drag.radius !== 0.1) drag.rgb.set(2, 1, 0);
+          //if (drag.radius !== 0.1) drag.rgb.set(2, 1, 0);
         }
         // dragging
         let x = (2.0 * pointer.x / canvas.width - 1) * 0.55 * camDist * gl.aspect;
@@ -304,7 +304,9 @@ export interface Struct {
   nodes: {[name:string]: NodeParams};
   constraints: any[];
 }
+
 let theStruct: Struct;
+
 export function init(struct: Struct) {
   theStruct = struct;
   // load nodes
@@ -328,4 +330,9 @@ export function init(struct: Struct) {
 
 window.setFriction = function (f) { friction = f; }
 window.getFriction = function () {return friction};
-
+
+window.updateNodes = function (f:(n:Node) => void) {
+  for (let n of nodes) {
+    f(n);
+  }
+}
