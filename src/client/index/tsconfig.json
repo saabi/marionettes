@@ -17,6 +17,7 @@
   "files": [
     "../WebGLFramework.ts",
     "../thing.ts",
+    "../verlet3.ts",
     "index.ts"
   ]
 }

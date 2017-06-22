@@ -14,6 +14,8 @@ declare global {
     } 
 }
 
+type CSSParams = Partial<CSSStyleDeclaration>;
+
 export class Canvas {
 
     elem: HTMLCanvasElement; 
@@ -30,7 +32,7 @@ export class Canvas {
 
 	}
 
-	enableFullscreen ( style:CSSStyleDeclaration ) {
+	enableFullscreen ( style: CSSParams ) {
 
 		if (
 			document.fullscreenEnabled ||
@@ -100,7 +102,7 @@ export class Pointer {
 	down ( e: Event ) {
 
 		if (e.target !== this.canvas.elem) return;
-		this.move(e);
+		this.move(<MouseEvent>e);
 		this.xold = this.x;
 		this.yold = this.y;
 		this.isDown = true;
@@ -113,29 +115,32 @@ export class Pointer {
 
 	}
 
-	move  ( e: Event ) {
+	move  ( e: TouchEvent | MouseEvent ) {
 
-        //if (typeof e === 'TouchEvent')
-		const touchMode = e.targetTouches;
 		let pointer = null;
-		if (touchMode) {
-			e.preventDefault();
-			if (touchMode.length > 1) {
-				const dx = touchMode[0].clientX - touchMode[1].clientX;
-				const dy = touchMode[0].clientY - touchMode[1].clientY;
-				const d = dx * dx + dy * dy;
-				this.z += (d > this.zold) ? -0.2 : 0.2;
-				this.zold = d;
-				return;
-			}
-			pointer = touchMode[0];
-		} else pointer = e;
+        if (e instanceof TouchEvent) {
+			const touchMode = e.targetTouches;
+			if (touchMode) {
+				e.preventDefault();
+				if (touchMode.length > 1) {
+					const dx = touchMode[0].clientX - touchMode[1].clientX;
+					const dy = touchMode[0].clientY - touchMode[1].clientY;
+					const d = dx * dx + dy * dy;
+					this.z += (d > this.zold) ? -0.2 : 0.2;
+					this.zold = d;
+					return;
+				}
+				pointer = touchMode[0];
+			} else
+			throw new Error("Something's screwey...")
+		}
+		else pointer = e;
 		this.x = pointer.clientX;
 		this.y = pointer.clientY;
 
 	}
 
-	wheel ( e: Event ) {
+	wheel ( e: WheelEvent ) {
 
 		e.preventDefault();
 		this.z += e.deltaY > 0 ? -1 : 1;
@@ -159,9 +164,9 @@ export class WebGL {
     aspect: number;
     //textureUnits: [];
     vertexUnits: VertexUnit[];
-    currentShader;
+    currentShader: Shader;
 
-	constructor(canvas: Canvas, options: any) {
+	constructor(canvas: Canvas, options?: any) {
 
 		this.canvas = canvas;
 		this.gl = this.canvas.elem.getContext("webgl", options);
@@ -184,11 +189,11 @@ export class WebGL {
 				idx: null
 			});
 		}
-		this.currentShader = null;
+		//this.currentShader = null;
 
 	}
 
-	getExtension(name) {
+	getExtension(name: string) {
 
 		const ext = this.gl.getExtension(name);
 		if (!ext) {
@@ -245,7 +250,7 @@ export class WebGL {
 
 	}
 
-	depthTest(value = true) {
+	depthTest(value = true): WebGL {
 
 		if (value) {
 			this.gl.enable(this.gl.DEPTH_TEST);
@@ -268,11 +273,11 @@ export class WebGL {
 		return new Depthbuffer(this);
 	}
     */
-	shader(params) {
+	shader(params: ShaderParams) {
 		return new Shader(this, params);
 	}
 
-	drawable(params) {
+	drawable(params: Geometry) {
 		return new Drawable(this, params);
 	}
     /*
@@ -283,17 +288,16 @@ export class WebGL {
 	vec3(x = 0, y = 0, z = 0) {
 		return new Vec3(x, y, z);
 	}
-
-    /*
-	mat3(data) {
-		return new Mat3(data);
+    
+	mat3() {
+		return new Mat3();
 	}
 
-	mat4(data) {
-		return new Mat4(data);
+	mat4() {
+		return new Mat4();
 	}
-    */
-	meshesPointers() {
+    
+	meshesPointers() : MeshPointer[] {
 
 		return [
 			{
@@ -329,7 +333,7 @@ export class WebGL {
 
 	}
 
-	plane(s) {
+	plane(s: number): Geometry {
 
 		return {
 			pointers: this.meshesPointers(),
@@ -520,6 +524,11 @@ export class WebGL {
 
 }
 
+interface ShaderParams {
+	vertex: string;
+	fragment: string;
+}
+
 export class Shader {
     webGL: WebGL;
     gl: WebGLRenderingContext;
@@ -527,12 +536,12 @@ export class Shader {
     vs: WebGLShader;
     fs: WebGLShader;
 
-    uniformCache: {};
-    attributeCache: {}
+    uniformCache: {[name:string]:WebGLUniformLocation};
+    attributeCache: {[name:string]:number};
     samplers: {}
     unitCounter: number;
 
-	constructor(webGL, shaders) {
+	constructor(webGL: WebGL, shaders: ShaderParams) {
 
 		this.webGL = webGL;
 		this.gl = webGL.gl;
@@ -551,7 +560,7 @@ export class Shader {
 
 	}
 
-	compileShader(shader, source) {
+	compileShader(shader: WebGLShader, source: string) {
 
 		const boilerplate = `
 			#ifdef GL_FRAGMENT_PRECISION_HIGH
@@ -562,7 +571,7 @@ export class Shader {
 				precision mediump float;
 			#endif
 			#define PI 3.141592653589793
-    `;
+    		`;
 
 		this.gl.shaderSource(shader, boilerplate + '\n' + source);
 		this.gl.compileShader(shader);
@@ -572,7 +581,7 @@ export class Shader {
 
 	}
 
-	attributeLocation(name) {
+	attributeLocation(name: string) {
 
 		let location = this.attributeCache[name];
 		if (location === void 0) {
@@ -582,7 +591,7 @@ export class Shader {
 
 	}
 
-	uniformLocation(name) {
+	uniformLocation(name: string) {
 
 		let location = this.uniformCache[name];
 		if (location === void 0) {
@@ -611,7 +620,7 @@ export class Shader {
 
 	}
 
-	draw(drawable) {
+	draw(drawable: Drawable) {
 
 		drawable.setPointersForShader(this)
 			.draw();
@@ -619,7 +628,7 @@ export class Shader {
 
 	}
 
-	int(name, value) {
+	int(name: string, value: number) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -629,7 +638,8 @@ export class Shader {
 
 	}
 
-	sampler(name, texture) {
+	/*
+	sampler(name: string, texture) {
 
 		let unit = this.samplers[name];
 		if (unit === void 0) {
@@ -640,8 +650,9 @@ export class Shader {
 		return this;
 
 	}
+	*/
 
-	vec2(name, a, b) {
+	vec2(name: string, a: number, b: number) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -651,7 +662,7 @@ export class Shader {
 
 	}
 
-	vec3(name, a, b, c) {
+	vec3(name: string, a: number, b: number, c: number) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -661,7 +672,7 @@ export class Shader {
 
 	}
 
-	mat4(name, value) {
+	mat4(name: string, value: Mat4 | Float32Array | number[]) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -675,7 +686,7 @@ export class Shader {
 
 	}
 
-	mat3(name, value) {
+	mat3(name: string, value: Mat3 | Float32Array | number[]) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -689,7 +700,7 @@ export class Shader {
 
 	}
 
-	float(name, value) {
+	float(name:string, value: number) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -701,9 +712,22 @@ export class Shader {
 
 }
 
+interface MeshPointer {
+	name: string;
+	size: number;
+	offset: number;
+	stride: number;
+}
+
+interface Geometry {
+	pointers: MeshPointer[];
+	vertexSize: number;
+	vertices: number[];
+}
+
 export class Drawable {
 
-    pointers;
+    pointers: MeshPointer[];
     webGL: WebGL;
     gl: WebGLRenderingContext;
     buffer: WebGLBuffer;
@@ -711,7 +735,7 @@ export class Drawable {
     vertexSize: number;
     size: number;
 
-	constructor(webGL, obj) {
+	constructor(webGL: WebGL, obj: Geometry) {
 
 		this.pointers = obj.pointers;
 		this.webGL = webGL;
@@ -722,7 +746,7 @@ export class Drawable {
 		this.upload(new Float32Array(obj.vertices));
 	}
 
-	upload(vertices) {
+	upload(vertices: Float32Array) {
 
 		this.size = vertices.length / this.vertexSize;
 		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
@@ -731,7 +755,7 @@ export class Drawable {
 
 	}
 
-	setPointersForShader(shader) {
+	setPointersForShader(shader: Shader) {
 
 		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
 		for (let i = 0, len = this.pointers.length; i < len; ++i) {
@@ -742,7 +766,7 @@ export class Drawable {
 
 	}
 
-	setPointer(shader, pointer, idx) {
+	setPointer(shader: Shader, pointer: MeshPointer, idx: number) {
 
 		const location = shader.attributeLocation(pointer.name);
 		if (location >= 0) {
@@ -789,14 +813,14 @@ export class Vec3 {
 		this.z = z;
 	}
 
-	set(x, y, z) {
+	set(x: number, y: number, z: number) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		return this;
 	}
 
-	copy(v) {
+	copy(v: Vec3) {
 		this.x = v.x;
 		this.y = v.y;
 		this.z = v.z;
@@ -807,14 +831,33 @@ export class Vec3 {
 		return [this.x, this.y, this.z];
 	}
 
-	distance(b) {
+	add(v: Vec3) {
+		this.x += v.x;
+		this.y += v.y;
+		this.z += v.z;
+		return this;		
+	}
+	sub(v: Vec3) {
+		this.x -= v.x;
+		this.y -= v.y;
+		this.z -= v.z;
+		return this;		
+	}
+	mul(v: number) {
+		this.x *= v;
+		this.y *= v;
+		this.z *= v;
+		return this;		
+	}
+
+	distance(b: Vec3) {
 		const dx = b.x - this.x;
 		const dy = b.y - this.y;
 		const dz = b.z - this.z;
 		return Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
-	transformMat4(v, mat) {
+	transformMat4(v: Vec3, mat: Mat4) {
 		const m = mat.data;
 		const x = v.x;
 		const y = v.y;
@@ -854,10 +897,17 @@ export class Mat3 {
 
 	}
 
-	fromMat4Rot(source) {
+	fromMat4Rot(source: Mat4) {
 		return source.toMat3Rot(this);
 	}
 
+}
+
+interface Camera {
+	fov: number;
+	aspect: number;
+	near: number;
+	far: number;
 }
 
 export class Mat4 {
@@ -916,7 +966,7 @@ export class Mat4 {
 
 	}
 
-	set (a00, a10, a20, a30, a01, a11, a21, a31, a02, a12, a22, a32, a03, a13, a23, a33) {
+	set (a00: number, a10: number, a20: number, a30: number, a01: number, a11: number, a21: number, a31: number, a02: number, a12: number, a22: number, a32: number, a03: number, a13: number, a23: number, a33: number) {
 
 		const d = this.data;
 		d[0]  = a00;
@@ -939,7 +989,7 @@ export class Mat4 {
 
 	}
 
-	perspective(data) {
+	perspective(data: Camera) {
 
 		const fov = data.fov || 60;
 		const aspect = data.aspect || 1;
@@ -989,7 +1039,7 @@ export class Mat4 {
 
 	}
 
-	trans(x, y, z) {
+	trans(x: number, y: number, z: number) {
 
 		const d = this.data;
 		d[12] = d[0] * x + d[4] * y + d[8]  * z + d[12];
@@ -1000,7 +1050,7 @@ export class Mat4 {
 
 	}
 
-	rotatex(angle) {
+	rotatex(angle: number) {
 
 		const d = this.data;
 		const rad = Math.PI * (angle / 180);
@@ -1026,7 +1076,7 @@ export class Mat4 {
 
 	}
 
-	rotatey(angle) {
+	rotatey(angle: number) {
 
 		const d = this.data;
 		const rad = Math.PI * (angle / 180);
@@ -1052,7 +1102,7 @@ export class Mat4 {
 
 	}
 
-	rotatez(angle) {
+	rotatez(angle: number) {
 
 		const d = this.data;
 		const rad = Math.PI * (angle / 180);
@@ -1078,7 +1128,7 @@ export class Mat4 {
 
 	}
 
-	scale(x, y, z) {
+	scale(x: number, y: number, z: number) {
 
 		const d = this.data;
 		d[0] *= x;
@@ -1097,7 +1147,7 @@ export class Mat4 {
 
 	}
 
-	toMat3Rot(dest) {
+	toMat3Rot(dest: Mat3) {
 
 		const dst = dest.data;
 		const src = this.data;
@@ -1128,7 +1178,7 @@ export class Mat4 {
 
 	}
 
-	multiply(m1, m2) {
+	multiply(m1: Mat4, m2: Mat4) {
 		let b0, b1, b2, b3;
 		const mat = this.data;
 		const mat1 = m1.data;
@@ -1215,7 +1265,7 @@ export class Mat4 {
 		b10 = a21 * a33 - a23 * a31;
 		b11 = a22 * a33 - a23 * a32;
 		d = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-		if (d === 0) return;
+		if (d === 0) return undefined;
 		invDet = 1 / d;
 		mat[0] = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
 		mat[1] = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
