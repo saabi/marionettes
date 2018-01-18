@@ -1,6 +1,6 @@
 import {WebGL, Vec3, Mat4, Canvas, Pointer, Shader} from 'WebGLFramework';
 
-const friction = 0.001;
+var friction = 0.001;
 
 interface NodeParams {
   x: number;
@@ -328,6 +328,14 @@ export function init(struct: Struct) {
   run(0);
 }
 
+declare global {
+  function resize() : void;
+  interface Window {
+    setFriction: (f:number) => void;
+    getFriction: () => number;
+    updateNodes: (f:(n:Node) => void) => void;
+  }
+}
 window.setFriction = function (f) { friction = f; }
 window.getFriction = function () {return friction};
 
