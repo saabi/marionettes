@@ -1,378 +1,378 @@
 /**
- * Adapted from WebGL framework by Florian Boesch - @pyalot
- * https://github.com/pyalot/soft-shadow-mapping/blob/master/framework.coffee
- */
+* Adapted from WebGL framework by Florian Boesch - @pyalot
+* https://github.com/pyalot/soft-shadow-mapping/blob/master/framework.coffee
+*/
 
 declare global {
-    interface Document {
-        readonly mozFullScreenEnabled: boolean;
-        readonly msFullscreenEnabled: boolean;
-    }
-    interface HTMLElement {
-        mozRequestFullScreen(): void;
-        msRequestFullscreen(): void;
-    } 
+	interface Document {
+		readonly mozFullScreenEnabled: boolean;
+		readonly msFullscreenEnabled: boolean;
+	}
+	interface HTMLElement {
+		mozRequestFullScreen(): void;
+		msRequestFullscreen(): void;
+	}
 }
 
 interface CSSStyles {
-    alignContent: string | null;
-    alignItems: string | null;
-    alignmentBaseline: string | null;
-    alignSelf: string | null;
-    animation: string | null;
-    animationDelay: string | null;
-    animationDirection: string | null;
-    animationDuration: string | null;
-    animationFillMode: string | null;
-    animationIterationCount: string | null;
-    animationName: string | null;
-    animationPlayState: string | null;
-    animationTimingFunction: string | null;
-    backfaceVisibility: string | null;
-    background: string | null;
-    backgroundAttachment: string | null;
-    backgroundClip: string | null;
-    backgroundColor: string | null;
-    backgroundImage: string | null;
-    backgroundOrigin: string | null;
-    backgroundPosition: string | null;
-    backgroundPositionX: string | null;
-    backgroundPositionY: string | null;
-    backgroundRepeat: string | null;
-    backgroundSize: string | null;
-    baselineShift: string | null;
-    border: string | null;
-    borderBottom: string | null;
-    borderBottomColor: string | null;
-    borderBottomLeftRadius: string | null;
-    borderBottomRightRadius: string | null;
-    borderBottomStyle: string | null;
-    borderBottomWidth: string | null;
-    borderCollapse: string | null;
-    borderColor: string | null;
-    borderImage: string | null;
-    borderImageOutset: string | null;
-    borderImageRepeat: string | null;
-    borderImageSlice: string | null;
-    borderImageSource: string | null;
-    borderImageWidth: string | null;
-    borderLeft: string | null;
-    borderLeftColor: string | null;
-    borderLeftStyle: string | null;
-    borderLeftWidth: string | null;
-    borderRadius: string | null;
-    borderRight: string | null;
-    borderRightColor: string | null;
-    borderRightStyle: string | null;
-    borderRightWidth: string | null;
-    borderSpacing: string | null;
-    borderStyle: string | null;
-    borderTop: string | null;
-    borderTopColor: string | null;
-    borderTopLeftRadius: string | null;
-    borderTopRightRadius: string | null;
-    borderTopStyle: string | null;
-    borderTopWidth: string | null;
-    borderWidth: string | null;
-    bottom: string | null;
-    boxShadow: string | null;
-    boxSizing: string | null;
-    breakAfter: string | null;
-    breakBefore: string | null;
-    breakInside: string | null;
-    captionSide: string | null;
-    clear: string | null;
-    clip: string | null;
-    clipPath: string | null;
-    clipRule: string | null;
-    color: string | null;
-    colorInterpolationFilters: string | null;
-    columnCount: any;
-    columnFill: string | null;
-    columnGap: any;
-    columnRule: string | null;
-    columnRuleColor: any;
-    columnRuleStyle: string | null;
-    columnRuleWidth: any;
-    columns: string | null;
-    columnSpan: string | null;
-    columnWidth: any;
-    content: string | null;
-    counterIncrement: string | null;
-    counterReset: string | null;
-    cssFloat: string | null;
-    cssText: string;
-    cursor: string | null;
-    direction: string | null;
-    display: string | null;
-    dominantBaseline: string | null;
-    emptyCells: string | null;
-    enableBackground: string | null;
-    fill: string | null;
-    fillOpacity: string | null;
-    fillRule: string | null;
-    filter: string | null;
-    flex: string | null;
-    flexBasis: string | null;
-    flexDirection: string | null;
-    flexFlow: string | null;
-    flexGrow: string | null;
-    flexShrink: string | null;
-    flexWrap: string | null;
-    floodColor: string | null;
-    floodOpacity: string | null;
-    font: string | null;
-    fontFamily: string | null;
-    fontFeatureSettings: string | null;
-    fontSize: string | null;
-    fontSizeAdjust: string | null;
-    fontStretch: string | null;
-    fontStyle: string | null;
-    fontVariant: string | null;
-    fontWeight: string | null;
-    glyphOrientationHorizontal: string | null;
-    glyphOrientationVertical: string | null;
-    height: string | null;
-    imeMode: string | null;
-    justifyContent: string | null;
-    kerning: string | null;
-    layoutGrid: string | null;
-    layoutGridChar: string | null;
-    layoutGridLine: string | null;
-    layoutGridMode: string | null;
-    layoutGridType: string | null;
-    left: string | null;
-    letterSpacing: string | null;
-    lightingColor: string | null;
-    lineBreak: string | null;
-    lineHeight: string | null;
-    listStyle: string | null;
-    listStyleImage: string | null;
-    listStylePosition: string | null;
-    listStyleType: string | null;
-    margin: string | null;
-    marginBottom: string | null;
-    marginLeft: string | null;
-    marginRight: string | null;
-    marginTop: string | null;
-    marker: string | null;
-    markerEnd: string | null;
-    markerMid: string | null;
-    markerStart: string | null;
-    mask: string | null;
-    maxHeight: string | null;
-    maxWidth: string | null;
-    minHeight: string | null;
-    minWidth: string | null;
-    msContentZoomChaining: string | null;
-    msContentZooming: string | null;
-    msContentZoomLimit: string | null;
-    msContentZoomLimitMax: any;
-    msContentZoomLimitMin: any;
-    msContentZoomSnap: string | null;
-    msContentZoomSnapPoints: string | null;
-    msContentZoomSnapType: string | null;
-    msFlowFrom: string | null;
-    msFlowInto: string | null;
-    msFontFeatureSettings: string | null;
-    msGridColumn: any;
-    msGridColumnAlign: string | null;
-    msGridColumns: string | null;
-    msGridColumnSpan: any;
-    msGridRow: any;
-    msGridRowAlign: string | null;
-    msGridRows: string | null;
-    msGridRowSpan: any;
-    msHighContrastAdjust: string | null;
-    msHyphenateLimitChars: string | null;
-    msHyphenateLimitLines: any;
-    msHyphenateLimitZone: any;
-    msHyphens: string | null;
-    msImeAlign: string | null;
-    msOverflowStyle: string | null;
-    msScrollChaining: string | null;
-    msScrollLimit: string | null;
-    msScrollLimitXMax: any;
-    msScrollLimitXMin: any;
-    msScrollLimitYMax: any;
-    msScrollLimitYMin: any;
-    msScrollRails: string | null;
-    msScrollSnapPointsX: string | null;
-    msScrollSnapPointsY: string | null;
-    msScrollSnapType: string | null;
-    msScrollSnapX: string | null;
-    msScrollSnapY: string | null;
-    msScrollTranslation: string | null;
-    msTextCombineHorizontal: string | null;
-    msTextSizeAdjust: any;
-    msTouchAction: string | null;
-    msTouchSelect: string | null;
-    msUserSelect: string | null;
-    msWrapFlow: string;
-    msWrapMargin: any;
-    msWrapThrough: string;
-    opacity: string | null;
-    order: string | null;
-    orphans: string | null;
-    outline: string | null;
-    outlineColor: string | null;
-    outlineOffset: string | null;
-    outlineStyle: string | null;
-    outlineWidth: string | null;
-    overflow: string | null;
-    overflowX: string | null;
-    overflowY: string | null;
-    padding: string | null;
-    paddingBottom: string | null;
-    paddingLeft: string | null;
-    paddingRight: string | null;
-    paddingTop: string | null;
-    pageBreakAfter: string | null;
-    pageBreakBefore: string | null;
-    pageBreakInside: string | null;
-    perspective: string | null;
-    perspectiveOrigin: string | null;
-    pointerEvents: string | null;
-    position: string | null;
-    quotes: string | null;
-    right: string | null;
-    rotate: string | null;
-    rubyAlign: string | null;
-    rubyOverhang: string | null;
-    rubyPosition: string | null;
-    scale: string | null;
-    stopColor: string | null;
-    stopOpacity: string | null;
-    stroke: string | null;
-    strokeDasharray: string | null;
-    strokeDashoffset: string | null;
-    strokeLinecap: string | null;
-    strokeLinejoin: string | null;
-    strokeMiterlimit: string | null;
-    strokeOpacity: string | null;
-    strokeWidth: string | null;
-    tableLayout: string | null;
-    textAlign: string | null;
-    textAlignLast: string | null;
-    textAnchor: string | null;
-    textDecoration: string | null;
-    textIndent: string | null;
-    textJustify: string | null;
-    textKashida: string | null;
-    textKashidaSpace: string | null;
-    textOverflow: string | null;
-    textShadow: string | null;
-    textTransform: string | null;
-    textUnderlinePosition: string | null;
-    top: string | null;
-    touchAction: string | null;
-    transform: string | null;
-    transformOrigin: string | null;
-    transformStyle: string | null;
-    transition: string | null;
-    transitionDelay: string | null;
-    transitionDuration: string | null;
-    transitionProperty: string | null;
-    transitionTimingFunction: string | null;
-    translate: string | null;
-    unicodeBidi: string | null;
-    verticalAlign: string | null;
-    visibility: string | null;
-    webkitAlignContent: string | null;
-    webkitAlignItems: string | null;
-    webkitAlignSelf: string | null;
-    webkitAnimation: string | null;
-    webkitAnimationDelay: string | null;
-    webkitAnimationDirection: string | null;
-    webkitAnimationDuration: string | null;
-    webkitAnimationFillMode: string | null;
-    webkitAnimationIterationCount: string | null;
-    webkitAnimationName: string | null;
-    webkitAnimationPlayState: string | null;
-    webkitAnimationTimingFunction: string | null;
-    webkitAppearance: string | null;
-    webkitBackfaceVisibility: string | null;
-    webkitBackgroundClip: string | null;
-    webkitBackgroundOrigin: string | null;
-    webkitBackgroundSize: string | null;
-    webkitBorderBottomLeftRadius: string | null;
-    webkitBorderBottomRightRadius: string | null;
-    webkitBorderImage: string | null;
-    webkitBorderRadius: string | null;
-    webkitBorderTopLeftRadius: string | null;
-    webkitBorderTopRightRadius: string | null;
-    webkitBoxAlign: string | null;
-    webkitBoxDirection: string | null;
-    webkitBoxFlex: string | null;
-    webkitBoxOrdinalGroup: string | null;
-    webkitBoxOrient: string | null;
-    webkitBoxPack: string | null;
-    webkitBoxSizing: string | null;
-    webkitColumnBreakAfter: string | null;
-    webkitColumnBreakBefore: string | null;
-    webkitColumnBreakInside: string | null;
-    webkitColumnCount: any;
-    webkitColumnGap: any;
-    webkitColumnRule: string | null;
-    webkitColumnRuleColor: any;
-    webkitColumnRuleStyle: string | null;
-    webkitColumnRuleWidth: any;
-    webkitColumns: string | null;
-    webkitColumnSpan: string | null;
-    webkitColumnWidth: any;
-    webkitFilter: string | null;
-    webkitFlex: string | null;
-    webkitFlexBasis: string | null;
-    webkitFlexDirection: string | null;
-    webkitFlexFlow: string | null;
-    webkitFlexGrow: string | null;
-    webkitFlexShrink: string | null;
-    webkitFlexWrap: string | null;
-    webkitJustifyContent: string | null;
-    webkitOrder: string | null;
-    webkitPerspective: string | null;
-    webkitPerspectiveOrigin: string | null;
-    webkitTapHighlightColor: string | null;
-    webkitTextFillColor: string | null;
-    webkitTextSizeAdjust: any;
-    webkitTextStroke: string | null;
-    webkitTextStrokeColor: string | null;
-    webkitTextStrokeWidth: string | null;
-    webkitTransform: string | null;
-    webkitTransformOrigin: string | null;
-    webkitTransformStyle: string | null;
-    webkitTransition: string | null;
-    webkitTransitionDelay: string | null;
-    webkitTransitionDuration: string | null;
-    webkitTransitionProperty: string | null;
-    webkitTransitionTimingFunction: string | null;
-    webkitUserModify: string | null;
-    webkitUserSelect: string | null;
-    webkitWritingMode: string | null;
-    whiteSpace: string | null;
-    widows: string | null;
-    width: string | null;
-    wordBreak: string | null;
-    wordSpacing: string | null;
-    wordWrap: string | null;
-    writingMode: string | null;
-    zIndex: string | null;
-    zoom: string | null;
-    resize: string | null;
-    userSelect: string | null;
-    [index: string]: string;
+	alignContent: string | null;
+	alignItems: string | null;
+	alignmentBaseline: string | null;
+	alignSelf: string | null;
+	animation: string | null;
+	animationDelay: string | null;
+	animationDirection: string | null;
+	animationDuration: string | null;
+	animationFillMode: string | null;
+	animationIterationCount: string | null;
+	animationName: string | null;
+	animationPlayState: string | null;
+	animationTimingFunction: string | null;
+	backfaceVisibility: string | null;
+	background: string | null;
+	backgroundAttachment: string | null;
+	backgroundClip: string | null;
+	backgroundColor: string | null;
+	backgroundImage: string | null;
+	backgroundOrigin: string | null;
+	backgroundPosition: string | null;
+	backgroundPositionX: string | null;
+	backgroundPositionY: string | null;
+	backgroundRepeat: string | null;
+	backgroundSize: string | null;
+	baselineShift: string | null;
+	border: string | null;
+	borderBottom: string | null;
+	borderBottomColor: string | null;
+	borderBottomLeftRadius: string | null;
+	borderBottomRightRadius: string | null;
+	borderBottomStyle: string | null;
+	borderBottomWidth: string | null;
+	borderCollapse: string | null;
+	borderColor: string | null;
+	borderImage: string | null;
+	borderImageOutset: string | null;
+	borderImageRepeat: string | null;
+	borderImageSlice: string | null;
+	borderImageSource: string | null;
+	borderImageWidth: string | null;
+	borderLeft: string | null;
+	borderLeftColor: string | null;
+	borderLeftStyle: string | null;
+	borderLeftWidth: string | null;
+	borderRadius: string | null;
+	borderRight: string | null;
+	borderRightColor: string | null;
+	borderRightStyle: string | null;
+	borderRightWidth: string | null;
+	borderSpacing: string | null;
+	borderStyle: string | null;
+	borderTop: string | null;
+	borderTopColor: string | null;
+	borderTopLeftRadius: string | null;
+	borderTopRightRadius: string | null;
+	borderTopStyle: string | null;
+	borderTopWidth: string | null;
+	borderWidth: string | null;
+	bottom: string | null;
+	boxShadow: string | null;
+	boxSizing: string | null;
+	breakAfter: string | null;
+	breakBefore: string | null;
+	breakInside: string | null;
+	captionSide: string | null;
+	clear: string | null;
+	clip: string | null;
+	clipPath: string | null;
+	clipRule: string | null;
+	color: string | null;
+	colorInterpolationFilters: string | null;
+	columnCount: any;
+	columnFill: string | null;
+	columnGap: any;
+	columnRule: string | null;
+	columnRuleColor: any;
+	columnRuleStyle: string | null;
+	columnRuleWidth: any;
+	columns: string | null;
+	columnSpan: string | null;
+	columnWidth: any;
+	content: string | null;
+	counterIncrement: string | null;
+	counterReset: string | null;
+	cssFloat: string | null;
+	cssText: string;
+	cursor: string | null;
+	direction: string | null;
+	display: string | null;
+	dominantBaseline: string | null;
+	emptyCells: string | null;
+	enableBackground: string | null;
+	fill: string | null;
+	fillOpacity: string | null;
+	fillRule: string | null;
+	filter: string | null;
+	flex: string | null;
+	flexBasis: string | null;
+	flexDirection: string | null;
+	flexFlow: string | null;
+	flexGrow: string | null;
+	flexShrink: string | null;
+	flexWrap: string | null;
+	floodColor: string | null;
+	floodOpacity: string | null;
+	font: string | null;
+	fontFamily: string | null;
+	fontFeatureSettings: string | null;
+	fontSize: string | null;
+	fontSizeAdjust: string | null;
+	fontStretch: string | null;
+	fontStyle: string | null;
+	fontVariant: string | null;
+	fontWeight: string | null;
+	glyphOrientationHorizontal: string | null;
+	glyphOrientationVertical: string | null;
+	height: string | null;
+	imeMode: string | null;
+	justifyContent: string | null;
+	kerning: string | null;
+	layoutGrid: string | null;
+	layoutGridChar: string | null;
+	layoutGridLine: string | null;
+	layoutGridMode: string | null;
+	layoutGridType: string | null;
+	left: string | null;
+	letterSpacing: string | null;
+	lightingColor: string | null;
+	lineBreak: string | null;
+	lineHeight: string | null;
+	listStyle: string | null;
+	listStyleImage: string | null;
+	listStylePosition: string | null;
+	listStyleType: string | null;
+	margin: string | null;
+	marginBottom: string | null;
+	marginLeft: string | null;
+	marginRight: string | null;
+	marginTop: string | null;
+	marker: string | null;
+	markerEnd: string | null;
+	markerMid: string | null;
+	markerStart: string | null;
+	mask: string | null;
+	maxHeight: string | null;
+	maxWidth: string | null;
+	minHeight: string | null;
+	minWidth: string | null;
+	msContentZoomChaining: string | null;
+	msContentZooming: string | null;
+	msContentZoomLimit: string | null;
+	msContentZoomLimitMax: any;
+	msContentZoomLimitMin: any;
+	msContentZoomSnap: string | null;
+	msContentZoomSnapPoints: string | null;
+	msContentZoomSnapType: string | null;
+	msFlowFrom: string | null;
+	msFlowInto: string | null;
+	msFontFeatureSettings: string | null;
+	msGridColumn: any;
+	msGridColumnAlign: string | null;
+	msGridColumns: string | null;
+	msGridColumnSpan: any;
+	msGridRow: any;
+	msGridRowAlign: string | null;
+	msGridRows: string | null;
+	msGridRowSpan: any;
+	msHighContrastAdjust: string | null;
+	msHyphenateLimitChars: string | null;
+	msHyphenateLimitLines: any;
+	msHyphenateLimitZone: any;
+	msHyphens: string | null;
+	msImeAlign: string | null;
+	msOverflowStyle: string | null;
+	msScrollChaining: string | null;
+	msScrollLimit: string | null;
+	msScrollLimitXMax: any;
+	msScrollLimitXMin: any;
+	msScrollLimitYMax: any;
+	msScrollLimitYMin: any;
+	msScrollRails: string | null;
+	msScrollSnapPointsX: string | null;
+	msScrollSnapPointsY: string | null;
+	msScrollSnapType: string | null;
+	msScrollSnapX: string | null;
+	msScrollSnapY: string | null;
+	msScrollTranslation: string | null;
+	msTextCombineHorizontal: string | null;
+	msTextSizeAdjust: any;
+	msTouchAction: string | null;
+	msTouchSelect: string | null;
+	msUserSelect: string | null;
+	msWrapFlow: string;
+	msWrapMargin: any;
+	msWrapThrough: string;
+	opacity: string | null;
+	order: string | null;
+	orphans: string | null;
+	outline: string | null;
+	outlineColor: string | null;
+	outlineOffset: string | null;
+	outlineStyle: string | null;
+	outlineWidth: string | null;
+	overflow: string | null;
+	overflowX: string | null;
+	overflowY: string | null;
+	padding: string | null;
+	paddingBottom: string | null;
+	paddingLeft: string | null;
+	paddingRight: string | null;
+	paddingTop: string | null;
+	pageBreakAfter: string | null;
+	pageBreakBefore: string | null;
+	pageBreakInside: string | null;
+	perspective: string | null;
+	perspectiveOrigin: string | null;
+	pointerEvents: string | null;
+	position: string | null;
+	quotes: string | null;
+	right: string | null;
+	rotate: string | null;
+	rubyAlign: string | null;
+	rubyOverhang: string | null;
+	rubyPosition: string | null;
+	scale: string | null;
+	stopColor: string | null;
+	stopOpacity: string | null;
+	stroke: string | null;
+	strokeDasharray: string | null;
+	strokeDashoffset: string | null;
+	strokeLinecap: string | null;
+	strokeLinejoin: string | null;
+	strokeMiterlimit: string | null;
+	strokeOpacity: string | null;
+	strokeWidth: string | null;
+	tableLayout: string | null;
+	textAlign: string | null;
+	textAlignLast: string | null;
+	textAnchor: string | null;
+	textDecoration: string | null;
+	textIndent: string | null;
+	textJustify: string | null;
+	textKashida: string | null;
+	textKashidaSpace: string | null;
+	textOverflow: string | null;
+	textShadow: string | null;
+	textTransform: string | null;
+	textUnderlinePosition: string | null;
+	top: string | null;
+	touchAction: string | null;
+	transform: string | null;
+	transformOrigin: string | null;
+	transformStyle: string | null;
+	transition: string | null;
+	transitionDelay: string | null;
+	transitionDuration: string | null;
+	transitionProperty: string | null;
+	transitionTimingFunction: string | null;
+	translate: string | null;
+	unicodeBidi: string | null;
+	verticalAlign: string | null;
+	visibility: string | null;
+	webkitAlignContent: string | null;
+	webkitAlignItems: string | null;
+	webkitAlignSelf: string | null;
+	webkitAnimation: string | null;
+	webkitAnimationDelay: string | null;
+	webkitAnimationDirection: string | null;
+	webkitAnimationDuration: string | null;
+	webkitAnimationFillMode: string | null;
+	webkitAnimationIterationCount: string | null;
+	webkitAnimationName: string | null;
+	webkitAnimationPlayState: string | null;
+	webkitAnimationTimingFunction: string | null;
+	webkitAppearance: string | null;
+	webkitBackfaceVisibility: string | null;
+	webkitBackgroundClip: string | null;
+	webkitBackgroundOrigin: string | null;
+	webkitBackgroundSize: string | null;
+	webkitBorderBottomLeftRadius: string | null;
+	webkitBorderBottomRightRadius: string | null;
+	webkitBorderImage: string | null;
+	webkitBorderRadius: string | null;
+	webkitBorderTopLeftRadius: string | null;
+	webkitBorderTopRightRadius: string | null;
+	webkitBoxAlign: string | null;
+	webkitBoxDirection: string | null;
+	webkitBoxFlex: string | null;
+	webkitBoxOrdinalGroup: string | null;
+	webkitBoxOrient: string | null;
+	webkitBoxPack: string | null;
+	webkitBoxSizing: string | null;
+	webkitColumnBreakAfter: string | null;
+	webkitColumnBreakBefore: string | null;
+	webkitColumnBreakInside: string | null;
+	webkitColumnCount: any;
+	webkitColumnGap: any;
+	webkitColumnRule: string | null;
+	webkitColumnRuleColor: any;
+	webkitColumnRuleStyle: string | null;
+	webkitColumnRuleWidth: any;
+	webkitColumns: string | null;
+	webkitColumnSpan: string | null;
+	webkitColumnWidth: any;
+	webkitFilter: string | null;
+	webkitFlex: string | null;
+	webkitFlexBasis: string | null;
+	webkitFlexDirection: string | null;
+	webkitFlexFlow: string | null;
+	webkitFlexGrow: string | null;
+	webkitFlexShrink: string | null;
+	webkitFlexWrap: string | null;
+	webkitJustifyContent: string | null;
+	webkitOrder: string | null;
+	webkitPerspective: string | null;
+	webkitPerspectiveOrigin: string | null;
+	webkitTapHighlightColor: string | null;
+	webkitTextFillColor: string | null;
+	webkitTextSizeAdjust: any;
+	webkitTextStroke: string | null;
+	webkitTextStrokeColor: string | null;
+	webkitTextStrokeWidth: string | null;
+	webkitTransform: string | null;
+	webkitTransformOrigin: string | null;
+	webkitTransformStyle: string | null;
+	webkitTransition: string | null;
+	webkitTransitionDelay: string | null;
+	webkitTransitionDuration: string | null;
+	webkitTransitionProperty: string | null;
+	webkitTransitionTimingFunction: string | null;
+	webkitUserModify: string | null;
+	webkitUserSelect: string | null;
+	webkitWritingMode: string | null;
+	whiteSpace: string | null;
+	widows: string | null;
+	width: string | null;
+	wordBreak: string | null;
+	wordSpacing: string | null;
+	wordWrap: string | null;
+	writingMode: string | null;
+	zIndex: string | null;
+	zoom: string | null;
+	resize: string | null;
+	userSelect: string | null;
+	[index: string]: string;
 }
 type CSSParams = Partial<CSSStyles>;
 
 export class Canvas {
 
-    elem: HTMLCanvasElement; 
-    width: number;
-    height: number;
+	elem: HTMLCanvasElement;
+	width: number;
+	height: number;
 
-    bfs: HTMLButtonElement;
+	bfs: HTMLButtonElement;
 
-	constructor(container:string) {
+	constructor(container: string) {
 
 		this.elem = <HTMLCanvasElement>document.getElementById(container);
 		this.width = 0;
@@ -380,7 +380,7 @@ export class Canvas {
 
 	}
 
-	enableFullscreen ( style: CSSParams ) {
+	enableFullscreen(style: CSSParams) {
 
 		if (
 			document.fullscreenEnabled ||
@@ -417,16 +417,16 @@ export class Canvas {
 }
 
 export class Pointer {
-    x: number;
-    y: number;
-    z: number;
-    xold: number;
-    yold: number;
-    zold: number;
-    isDown: boolean;
-    canvas: Canvas;
+	x: number;
+	y: number;
+	z: number;
+	xold: number;
+	yold: number;
+	zold: number;
+	isDown: boolean;
+	canvas: Canvas;
 
-	constructor ( canvas: Canvas ) {
+	constructor(canvas: Canvas) {
 
 		this.x = 0;
 		this.y = 0;
@@ -447,7 +447,7 @@ export class Pointer {
 
 	}
 
-	down ( e: Event ) {
+	down(e: Event) {
 
 		if (e.target !== this.canvas.elem) return;
 		this.move(<MouseEvent>e);
@@ -457,16 +457,16 @@ export class Pointer {
 
 	}
 
-	up ( e: Event ) {
+	up(e: Event) {
 
 		this.isDown = false;
 
 	}
 
-	move  ( e: TouchEvent | MouseEvent ) {
+	move(e: TouchEvent | MouseEvent) {
 
 		let pointer = null;
-        if (e instanceof TouchEvent) {
+		if (e instanceof TouchEvent) {
 			const touchMode = e.targetTouches;
 			if (touchMode) {
 				e.preventDefault();
@@ -480,7 +480,7 @@ export class Pointer {
 				}
 				pointer = touchMode[0];
 			} else
-			throw new Error("Something's screwey...")
+				throw new Error("Something's screwey...")
 		}
 		else pointer = e;
 		this.x = pointer.clientX;
@@ -488,7 +488,7 @@ export class Pointer {
 
 	}
 
-	wheel ( e: WheelEvent ) {
+	wheel(e: WheelEvent) {
 
 		e.preventDefault();
 		this.z += e.deltaY > 0 ? -1 : 1;
@@ -498,21 +498,21 @@ export class Pointer {
 }
 
 export interface VertexUnit {
-    enabled: boolean;
-    drawable: Drawable;
-    idx: number;
+	enabled: boolean;
+	drawable: Drawable;
+	idx: number;
 }
 
 export class WebGL {
-    canvas: Canvas;
-    gl: WebGLRenderingContext;
+	canvas: Canvas;
+	gl: WebGLRenderingContext;
 
-    width: number;
-    height: number;
-    aspect: number;
-    //textureUnits: [];
-    vertexUnits: VertexUnit[];
-    currentShader: Shader;
+	width: number;
+	height: number;
+	aspect: number;
+	//textureUnits: [];
+	vertexUnits: VertexUnit[];
+	currentShader: Shader;
 
 	constructor(canvas: Canvas, options?: any) {
 
@@ -523,12 +523,12 @@ export class WebGL {
 		this.width = 0;
 		this.height = 0;
 		this.aspect = 0;
-        /*
+		/*
 		this.textureUnits = [];
 		for (let i = 0; i < 16; ++i) {
 			this.textureUnits.push(null);
 		}
-        */
+		*/
 		this.vertexUnits = [];
 		for (let i = 0; i < 16; ++i) {
 			this.vertexUnits.push({
@@ -608,19 +608,19 @@ export class WebGL {
 		return this;
 
 	}
-    /*
+	/*
 	texture(params) {
 		return new Texture(this, params);
 	}
-
+	
 	framebuffer() {
 		return new Framebuffer(this);
 	}
-
+	
 	depthbuffer() {
 		return new Depthbuffer(this);
 	}
-    */
+	*/
 	shader(params: ShaderParams) {
 		return new Shader(this, params);
 	}
@@ -628,15 +628,15 @@ export class WebGL {
 	drawable(params: Geometry) {
 		return new Drawable(this, params);
 	}
-    /*
+	/*
 	filter(size, filter) {
 		return new Filter(this, size, filter);
 	}
-    */
+	*/
 	vec3(x = 0, y = 0, z = 0) {
 		return new Vec3(x, y, z);
 	}
-    
+
 	mat3() {
 		return new Mat3();
 	}
@@ -644,8 +644,8 @@ export class WebGL {
 	mat4() {
 		return new Mat4();
 	}
-    
-	meshesPointers() : MeshPointer[] {
+
+	meshesPointers(): MeshPointer[] {
 
 		return [
 			{
@@ -674,8 +674,8 @@ export class WebGL {
 			}],
 			vertexSize: 2,
 			vertices: [
-				-1, -1,  1, -1,  1,  1,
-				-1,  1, -1, -1,  1,  1
+				-1, -1, 1, -1, 1, 1,
+				-1, 1, -1, -1, 1, 1
 			]
 		};
 
@@ -688,11 +688,11 @@ export class WebGL {
 			vertexSize: 6,
 			vertices: [
 				-s, 0, -s, 0, 1, 0,
-				-s, 0,  s, 0, 1, 0,
-				 s, 0,  s, 0, 1, 0,
-				 s, 0, -s, 0, 1, 0,
+				-s, 0, s, 0, 1, 0,
+				s, 0, s, 0, 1, 0,
+				s, 0, -s, 0, 1, 0,
 				-s, 0, -s, 0, 1, 0,
-				 s, 0,  s, 0, 1, 0
+				s, 0, s, 0, 1, 0
 			]
 		};
 
@@ -704,47 +704,47 @@ export class WebGL {
 			pointers: this.meshesPointers(),
 			vertexSize: 6,
 			vertices: [
-				-x, -y, -z,  0,  0, -1,
-				-x,  y, -z,  0,  0, -1,
-				 x,  y, -z,  0,  0, -1,
-				 x, -y, -z,  0,  0, -1,
-				-x, -y, -z,  0,  0, -1,
-				 x,  y, -z,  0,  0, -1,
+				-x, -y, -z, 0, 0, -1,
+				-x, y, -z, 0, 0, -1,
+				x, y, -z, 0, 0, -1,
+				x, -y, -z, 0, 0, -1,
+				-x, -y, -z, 0, 0, -1,
+				x, y, -z, 0, 0, -1,
 
-				 x,  y,  z,  0,  0,  1,
-				-x,  y,  z,  0,  0,  1,
-				-x, -y,  z,  0,  0,  1,
-				 x,  y,  z,  0,  0,  1,
-				-x, -y,  z,  0,  0,  1,
-				 x, -y,  z,  0,  0,  1,
+				x, y, z, 0, 0, 1,
+				-x, y, z, 0, 0, 1,
+				-x, -y, z, 0, 0, 1,
+				x, y, z, 0, 0, 1,
+				-x, -y, z, 0, 0, 1,
+				x, -y, z, 0, 0, 1,
 
-				-x,  y, -z,  0,  1,  0,
-				-x,  y,  z,  0,  1,  0,
-				 x,  y,  z,  0,  1,  0,
-				 x,  y, -z,  0,  1,  0,
-				-x,  y, -z,  0,  1,  0,
-				 x,  y,  z,  0,  1,  0,
+				-x, y, -z, 0, 1, 0,
+				-x, y, z, 0, 1, 0,
+				x, y, z, 0, 1, 0,
+				x, y, -z, 0, 1, 0,
+				-x, y, -z, 0, 1, 0,
+				x, y, z, 0, 1, 0,
 
-				 x, -y,  z,  0, -1,  0,
-				-x, -y,  z,  0, -1,  0,
-				-x, -y, -z,  0, -1,  0,
-				 x, -y,  z,  0, -1,  0,
-				-x, -y, -z,  0, -1,  0,
-				 x, -y, -z,  0, -1,  0,
+				x, -y, z, 0, -1, 0,
+				-x, -y, z, 0, -1, 0,
+				-x, -y, -z, 0, -1, 0,
+				x, -y, z, 0, -1, 0,
+				-x, -y, -z, 0, -1, 0,
+				x, -y, -z, 0, -1, 0,
 
-				-x, -y, -z, -1,  0,  0,
-				-x, -y,  z, -1,  0,  0,
-				-x,  y,  z, -1,  0,  0,
-				-x,  y, -z, -1,  0,  0,
-				-x, -y, -z, -1,  0,  0,
-				-x,  y,  z, -1,  0,  0,
+				-x, -y, -z, -1, 0, 0,
+				-x, -y, z, -1, 0, 0,
+				-x, y, z, -1, 0, 0,
+				-x, y, -z, -1, 0, 0,
+				-x, -y, -z, -1, 0, 0,
+				-x, y, z, -1, 0, 0,
 
-				 x,  y,  z,  1,  0,  0,
-				 x, -y,  z,  1,  0,  0,
-				 x, -y, -z,  1,  0,  0,
-				 x,  y,  z,  1,  0,  0,
-				 x, -y, -z,  1,  0,  0,
-				 x,  y, -z,  1,  0,  0
+				x, y, z, 1, 0, 0,
+				x, -y, z, 1, 0, 0,
+				x, -y, -z, 1, 0, 0,
+				x, y, z, 1, 0, 0,
+				x, -y, -z, 1, 0, 0,
+				x, y, -z, 1, 0, 0
 			]
 		};
 
@@ -826,13 +826,13 @@ export class WebGL {
 
 	}
 
-	cylinder ( radius = 1, res = 36) {
+	cylinder(radius = 1, res = 36) {
 
 		let angle = 0;
 		const alpha = 2 * Math.PI / res;
 		const vertices = [];
 
-		for ( let i = 0; i < res; i++) {
+		for (let i = 0; i < res; i++) {
 
 			const c0 = Math.cos(angle);
 			const s0 = Math.sin(angle);
@@ -842,20 +842,20 @@ export class WebGL {
 			vertices.push(
 
 				c1 * radius, s1 * radius, -1, c1, s1, -1,
-				c0 * radius, s0 * radius,  1, c0, s0,  1,
+				c0 * radius, s0 * radius, 1, c0, s0, 1,
 				c0 * radius, s0 * radius, -1, c0, s0, -1,
 
 				c1 * radius, s1 * radius, -1, c1, s1, -1,
-				c1 * radius, s1 * radius,  1, c1, s1,  1,
-				c0 * radius, s0 * radius,  1, c0, s0,  1,
+				c1 * radius, s1 * radius, 1, c1, s1, 1,
+				c0 * radius, s0 * radius, 1, c0, s0, 1,
 
 				c0 * radius, s0 * radius, -1, c0, s0, -1,
 				0, 0, -1, 0, 0, -1,
 				c1 * radius, s1 * radius, -1, c1, s1, -1,
 
-				c1 * radius, s1 * radius,  1, c1, s1,  1,
-				0, 0, -1, 0, 0,  1,
-				c0 * radius, s0 * radius,  1, c0, s0,  1
+				c1 * radius, s1 * radius, 1, c1, s1, 1,
+				0, 0, -1, 0, 0, 1,
+				c0 * radius, s0 * radius, 1, c0, s0, 1
 
 			);
 
@@ -878,16 +878,16 @@ interface ShaderParams {
 }
 
 export class Shader {
-    webGL: WebGL;
-    gl: WebGLRenderingContext;
-    program: WebGLProgram;
-    vs: WebGLShader;
-    fs: WebGLShader;
+	webGL: WebGL;
+	gl: WebGLRenderingContext;
+	program: WebGLProgram;
+	vs: WebGLShader;
+	fs: WebGLShader;
 
-    uniformCache: {[name:string]:WebGLUniformLocation};
-    attributeCache: {[name:string]:number};
-    samplers: {}
-    unitCounter: number;
+	uniformCache: { [name: string]: WebGLUniformLocation };
+	attributeCache: { [name: string]: number };
+	samplers: {}
+	unitCounter: number;
 
 	constructor(webGL: WebGL, shaders: ShaderParams) {
 
@@ -911,15 +911,15 @@ export class Shader {
 	compileShader(shader: WebGLShader, source: string) {
 
 		const boilerplate = `
-			#ifdef GL_FRAGMENT_PRECISION_HIGH
-				precision highp int;
-				precision highp float;
-			#else
-				precision mediump int;
-				precision mediump float;
-			#endif
-			#define PI 3.141592653589793
-    		`;
+		#ifdef GL_FRAGMENT_PRECISION_HIGH
+		precision highp int;
+		precision highp float;
+		#else
+		precision mediump int;
+		precision mediump float;
+		#endif
+		#define PI 3.141592653589793
+		`;
 
 		this.gl.shaderSource(shader, boilerplate + '\n' + source);
 		this.gl.compileShader(shader);
@@ -988,7 +988,7 @@ export class Shader {
 
 	/*
 	sampler(name: string, texture) {
-
+		
 		let unit = this.samplers[name];
 		if (unit === void 0) {
 			unit = this.samplers[name] = this.unitCounter++;
@@ -996,7 +996,7 @@ export class Shader {
 		texture.bind(unit);
 		this.int(name, unit);
 		return this;
-
+		
 	}
 	*/
 
@@ -1048,7 +1048,7 @@ export class Shader {
 
 	}
 
-	float(name:string, value: number) {
+	float(name: string, value: number) {
 
 		const loc = this.uniformLocation(name);
 		if (loc) {
@@ -1075,13 +1075,13 @@ interface Geometry {
 
 export class Drawable {
 
-    pointers: MeshPointer[];
-    webGL: WebGL;
-    gl: WebGLRenderingContext;
-    buffer: WebGLBuffer;
-    mode: number;
-    vertexSize: number;
-    size: number;
+	pointers: MeshPointer[];
+	webGL: WebGL;
+	gl: WebGLRenderingContext;
+	buffer: WebGLBuffer;
+	mode: number;
+	vertexSize: number;
+	size: number;
 
 	constructor(webGL: WebGL, obj: Geometry) {
 
@@ -1151,9 +1151,9 @@ export class Drawable {
 }
 
 export class Vec3 {
-    x: number;
-    y: number;
-    z: number;
+	x: number;
+	y: number;
+	z: number;
 
 	constructor(x = 0.0, y = 0.0, z = 0.0) {
 		this.x = x;
@@ -1183,19 +1183,19 @@ export class Vec3 {
 		this.x += v.x;
 		this.y += v.y;
 		this.z += v.z;
-		return this;		
+		return this;
 	}
 	sub(v: Vec3) {
 		this.x -= v.x;
 		this.y -= v.y;
 		this.z -= v.z;
-		return this;		
+		return this;
 	}
 	mul(v: number) {
 		this.x *= v;
 		this.y *= v;
 		this.z *= v;
-		return this;		
+		return this;
 	}
 
 	distance(b: Vec3) {
@@ -1211,16 +1211,16 @@ export class Vec3 {
 		const y = v.y;
 		const z = v.z;
 		const w = (m[3] * x + m[7] * y + m[11] * z + m[15]) || 1.0;
-		this.x  = (m[0] * x + m[4] * y + m[8]  * z + m[12]) / w;
-		this.y  = (m[1] * x + m[5] * y + m[9]  * z + m[13]) / w;
-		this.z  = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+		this.x = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+		this.y = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+		this.z = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
 		return this;
 	}
 
 }
 
 export class Mat3 {
-    data: Float32Array;
+	data: Float32Array;
 
 	constructor() {
 
@@ -1259,7 +1259,7 @@ interface Camera {
 }
 
 export class Mat4 {
-    data: Float32Array;
+	data: Float32Array;
 
 	constructor() {
 
@@ -1314,23 +1314,23 @@ export class Mat4 {
 
 	}
 
-	set (a00: number, a10: number, a20: number, a30: number, a01: number, a11: number, a21: number, a31: number, a02: number, a12: number, a22: number, a32: number, a03: number, a13: number, a23: number, a33: number) {
+	set(a00: number, a10: number, a20: number, a30: number, a01: number, a11: number, a21: number, a31: number, a02: number, a12: number, a22: number, a32: number, a03: number, a13: number, a23: number, a33: number) {
 
 		const d = this.data;
-		d[0]  = a00;
-		d[4]  = a10;
-		d[8]  = a20;
+		d[0] = a00;
+		d[4] = a10;
+		d[8] = a20;
 		d[12] = a30;
-		d[1]  = a01;
-		d[5]  = a11;
-		d[9]  = a21;
+		d[1] = a01;
+		d[5] = a11;
+		d[9] = a21;
 		d[13] = a31;
-		d[2]  = a02;
-		d[6]  = a12;
+		d[2] = a02;
+		d[6] = a12;
 		d[10] = a22;
 		d[14] = a32;
-		d[3]  = a03;
-		d[7]  = a13;
+		d[3] = a03;
+		d[7] = a13;
 		d[11] = a23;
 		d[15] = a33;
 		return this;
@@ -1360,7 +1360,7 @@ export class Mat4 {
 
 	}
 
-	ortho (near = -1, far = 1, top = -1, bottom = 1, left = -1, right = 1) {
+	ortho(near = -1, far = 1, top = -1, bottom = 1, left = -1, right = 1) {
 
 		const rl = right - left;
 		const tb = top - bottom;
@@ -1390,8 +1390,8 @@ export class Mat4 {
 	trans(x: number, y: number, z: number) {
 
 		const d = this.data;
-		d[12] = d[0] * x + d[4] * y + d[8]  * z + d[12];
-		d[13] = d[1] * x + d[5] * y + d[9]  * z + d[13];
+		d[12] = d[0] * x + d[4] * y + d[8] * z + d[12];
+		d[13] = d[1] * x + d[5] * y + d[9] * z + d[13];
 		d[14] = d[2] * x + d[6] * y + d[10] * z + d[14];
 		d[15] = d[3] * x + d[7] * y + d[11] * z + d[15];
 		return this;
@@ -1412,12 +1412,12 @@ export class Mat4 {
 		const a21 = d[9];
 		const a22 = d[10];
 		const a23 = d[11];
-		d[4] =  a10 *  c + a20 * s;
-		d[5] =  a11 *  c + a21 * s;
-		d[6] =  a12 *  c + a22 * s;
-		d[7] =  a13 *  c + a23 * s;
-		d[8] =  a10 * -s + a20 * c;
-		d[9] =  a11 * -s + a21 * c;
+		d[4] = a10 * c + a20 * s;
+		d[5] = a11 * c + a21 * s;
+		d[6] = a12 * c + a22 * s;
+		d[7] = a13 * c + a23 * s;
+		d[8] = a10 * -s + a20 * c;
+		d[9] = a11 * -s + a21 * c;
 		d[10] = a12 * -s + a22 * c;
 		d[11] = a13 * -s + a23 * c;
 		return this;
@@ -1438,14 +1438,14 @@ export class Mat4 {
 		const a21 = d[9];
 		const a22 = d[10];
 		const a23 = d[11];
-		d[0] =  a00 * c + a20 * -s;
-		d[1] =  a01 * c + a21 * -s;
-		d[2] =  a02 * c + a22 * -s;
-		d[3] =  a03 * c + a23 * -s;
-		d[8] =  a00 * s + a20 *  c;
-		d[9] =  a01 * s + a21 *  c;
-		d[10] = a02 * s + a22 *  c;
-		d[11] = a03 * s + a23 *  c;
+		d[0] = a00 * c + a20 * -s;
+		d[1] = a01 * c + a21 * -s;
+		d[2] = a02 * c + a22 * -s;
+		d[3] = a03 * c + a23 * -s;
+		d[8] = a00 * s + a20 * c;
+		d[9] = a01 * s + a21 * c;
+		d[10] = a02 * s + a22 * c;
+		d[11] = a03 * s + a23 * c;
 		return this;
 
 	}
@@ -1464,10 +1464,10 @@ export class Mat4 {
 		const a11 = d[5];
 		const a12 = d[6];
 		const a13 = d[7];
-		d[0] = a00 *  c + a10 * s;
-		d[1] = a01 *  c + a11 * s;
-		d[2] = a02 *  c + a12 * s;
-		d[3] = a03 *  c + a13 * s;
+		d[0] = a00 * c + a10 * s;
+		d[1] = a01 * c + a11 * s;
+		d[2] = a02 * c + a12 * s;
+		d[3] = a03 * c + a13 * s;
 		d[4] = a00 * -s + a10 * c;
 		d[5] = a01 * -s + a11 * c;
 		d[6] = a02 * -s + a12 * c;
@@ -1508,20 +1508,20 @@ export class Mat4 {
 		const a20 = src[8];
 		const a21 = src[9];
 		const a22 = src[10];
-		const b01 =  a22 * a11 - a12 * a21;
+		const b01 = a22 * a11 - a12 * a21;
 		const b11 = -a22 * a10 + a12 * a20;
-		const b21 =  a21 * a10 - a11 * a20;
+		const b21 = a21 * a10 - a11 * a20;
 		const d = a00 * b01 + a01 * b11 + a02 * b21;
 		const id = 1 / d;
 		dst[0] = b01 * id;
 		dst[3] = (-a22 * a01 + a02 * a21) * id;
-		dst[6] = ( a12 * a01 - a02 * a11) * id;
+		dst[6] = (a12 * a01 - a02 * a11) * id;
 		dst[1] = b11 * id;
-		dst[4] = ( a22 * a00 - a02 * a20) * id;
+		dst[4] = (a22 * a00 - a02 * a20) * id;
 		dst[7] = (-a12 * a00 + a02 * a10) * id;
 		dst[2] = b21 * id;
 		dst[5] = (-a21 * a00 + a01 * a20) * id;
-		dst[8] = ( a11 * a00 - a01 * a10) * id;
+		dst[8] = (a11 * a00 - a01 * a10) * id;
 		return dest;
 
 	}

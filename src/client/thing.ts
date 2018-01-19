@@ -1,4 +1,4 @@
-import {Vec3} from 'WebGLFramework';
+import { Vec3 } from 'WebGLFramework';
 
 export class Thing {
     pos = new Vec3;
@@ -7,27 +7,27 @@ export class Thing {
     damping = 0.8;
     centerAttraction = 0.02;
 
-    accelerate ( ax:number, ay:number, az:number ) {
+    accelerate(ax: number, ay: number, az: number) {
         var v = this.vel;
         v.x += ax;
         v.y += ay;
         v.z += az;
     }
-    move ( dx:number, dy:number, dz:number ) {
+    move(dx: number, dy: number, dz: number) {
         this.pos.x += dx;
         this.pos.y += dy;
         this.pos.z += dz;
     }
-    setRotation ( x:number, y:number, z:number ) {
+    setRotation(x: number, y: number, z: number) {
         this.rot.x = x;
         this.rot.y = y;
         this.rot.z = z;
     }
-    getPosition () {
+    getPosition() {
         var p = this.pos;
-        return { x:p.x, y:p.y, z:p.z };
+        return { x: p.x, y: p.y, z: p.z };
     };
-    update () {
+    update() {
         // dampen
         var v = this.vel;
         v.x *= this.damping;
@@ -41,7 +41,7 @@ export class Thing {
         v.z -= p.z * this.centerAttraction;
         this.move(v.x, v.y, v.z);
     }
-    reset () {
+    reset() {
         this.pos.set(0, 0, 0);
         this.vel.set(0, 0, 0);
         this.rot.set(0, 0, 0);
