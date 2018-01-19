@@ -1,4 +1,4 @@
-import { Thing } from 'thing';
+import { PhoneData } from 'thing';
 import * as io from 'socket.io-client';
 
 interface Vec {
@@ -17,7 +17,7 @@ class Device {
     absolute: boolean;
     rounder: number;
 
-    constructor(target: Thing) {
+    constructor(target: PhoneData) {
         var avgaccDisplay = document.getElementById('avgacc');
         var accDisplay = document.getElementById('acc');
         var rotDisplay = document.getElementById('rot');
@@ -80,8 +80,8 @@ class Device {
     }
 }
 
-var thing = new Thing();
-var phone = new Device(thing);
+var data = new PhoneData();
+var phone = new Device(data);
 
 let element = document.getElementById('thing')
 
@@ -91,7 +91,7 @@ socket.on('connect', () => {
 });
 
 function update() {
-    thing.update();
+    data.update();
 
     var message = {
         acc: phone.acc,
@@ -99,8 +99,8 @@ function update() {
     }
     socket.emit('message', message);
 
-    var p = thing.pos;
-    var r = thing.rot;
+    var p = data.pos;
+    var r = data.rot;
 
     var s = 'rotateZ(' + r.x + 'deg) rotateY(' + -r.y + 'deg) rotateX(' + r.z + 'deg) translate3d(' + (p.x - 25) + 'px,' + (p.y - 40) + 'px,' + p.z + 'px)';
     element.style.transform = s;

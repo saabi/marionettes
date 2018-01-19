@@ -1,6 +1,6 @@
-import { Vec3 } from 'WebGLFramework';
+import { Vec3 } from 'VecMath';
 
-export class Thing {
+export class PhoneData {
     pos = new Vec3;
     vel = new Vec3;
     rot = new Vec3;

@@ -1,64 +1,64 @@
-import { Thing } from 'thing';
 import * as io from 'socket.io-client';
-import { init, Struct } from 'verlet3';
+import { Vec3 } from 'VecMath';
+import { AssemblyParams, Assembly } from 'verlet3';
+import { Renderer, AssemblyList } from 'Renderer';
+import { PhoneData } from 'thing';
 
-/*
-interface Vec {
-		x:number;
-		y:number;
-		z:number;
-}
-*/
-
-interface Puppet {
+interface Marionette {
 	element: HTMLElement;
-	thing: Thing;
+	phoneData: PhoneData;
+	assembly: Assembly;
 }
-interface Puppets {
-	[id: string]: Puppet;
+interface MarionetteList {
+	[id: string]: Marionette;
 }
-let puppets: Puppets = {};
-let numPuppets = 0;
+const assemblies: AssemblyList = {};
+
+let marionettes: MarionetteList = {};
+let numMarionettes = 0;
 
 function left(width: number, count: number, index: number) {
 	let mid = width / count / 2;
 	return mid + index * width / count;
 }
-function addPuppet(id: string) {
+function addMarionette(id: string) {
 	console.log(`phone added: ${id}`)
-	let thing = new Thing();
+	let thing = new PhoneData();
 
-	let puppet = {
+	let puppet: Marionette = {
 		element: document.createElement('div'),
-		thing: new Thing
+		phoneData: new PhoneData,
+		assembly: new Assembly(marionetteTemplate, new Vec3(0,0,0))
 	}
-	numPuppets++;
+	numMarionettes++;
 	puppet.element.id = id;
 	puppet.element.className = 'thing'
 	document.body.appendChild(puppet.element);
-	puppets[id] = puppet;
+	marionettes[id] = puppet;
+	assemblies[id] = puppet.assembly;
 	let i = 0;
-	for (let j in puppets) {
-		puppets[j].element.style.left = left(document.body.offsetWidth, numPuppets, i++) + 'px';
+	for (let j in marionettes) {
+		marionettes[j].element.style.left = left(document.body.offsetWidth, numMarionettes, i++) + 'px';
 	}
 }
-function removePuppet(id: string) {
+function removeMarionette(id: string) {
 	console.log(`phone removed: ${id}`)
 	document.getElementById(id).remove();
-	delete puppets[id];
-	numPuppets--;
+	delete marionettes[id];
+	delete assemblies[id];
+	numMarionettes--;
 	let i = 0;
-	for (let j in puppets) {
-		puppets[j].element.style.left = left(document.body.offsetWidth, numPuppets, i++) + 'px';
+	for (let j in marionettes) {
+		marionettes[j].element.style.left = left(document.body.offsetWidth, numMarionettes, i++) + 'px';
 	}
 }
 function update(motion: any) {
-	if (!(motion.id in puppets)) {
+	if (!(motion.id in marionettes)) {
 		return
 	}
 
-	let thing = puppets[motion.id].thing;
-	let element = puppets[motion.id].element;
+	let thing = marionettes[motion.id].phoneData;
+	let element = marionettes[motion.id].element;
 
 	thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
 	thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
@@ -76,11 +76,25 @@ socket.on('connect', () => {
 	socket.emit('device', 'desktop');
 });
 
-socket.on('phoneadded', addPuppet);
-socket.on('phoneremoved', removePuppet);
+socket.on('phoneadded', addMarionette);
+socket.on('phoneremoved', removeMarionette);
 socket.on('motion', update);
 
-const struct: Struct = {
+const lightStruct: AssemblyParams = {
+	nodes: {
+		light: {
+			x: 0,
+			y: 1.2,
+			z: 0,
+			w: 0.1,
+			mass: 0.6,
+			color: [1000.0, 1000.0, 1000.0],
+			free: false
+		}
+	},
+	constraints: []
+}
+const marionetteTemplate: AssemblyParams = {
 	nodes: {
 		head: {
 			x: 0,
@@ -233,16 +247,6 @@ const struct: Struct = {
 			w: 0.03,
 			mass: 1.0,
 			color: [0.8, 1.2, 1.5]
-		},
-		// light
-		light: {
-			x: 0,
-			y: 1.2,
-			z: 0,
-			w: 0.1,
-			mass: 0.6,
-			color: [1000.0, 1000.0, 1000.0],
-			free: false
 		}
 	},
 	constraints: [
@@ -280,7 +284,7 @@ const struct: Struct = {
 function interpolate(v1: number, v2: number, p: number) {
 	return (v2 - v1) * p + v1;
 }
-function createString(struct: Struct, sections: number, name: string, attachTo: string, x: number, y: number, z: number) {
+function createString(struct: AssemblyParams, sections: number, name: string, attachTo: string, x: number, y: number, z: number) {
 	let destNode = struct.nodes[attachTo];
 	for (let i = 0; i < sections; i++) {
 		let p = i / sections;
@@ -298,8 +302,87 @@ function createString(struct: Struct, sections: number, name: string, attachTo: 
 	struct.constraints[struct.constraints.length - 1][1] = attachTo;
 }
 
-createString(struct, 30, 'ropehead', 'head', 0, 1.5, 0);
-createString(struct, 30, 'ropelwrist', 'lwrist', -.13, 1.02, 0);
-createString(struct, 30, 'roperwrist', 'rwrist', .13, 1.02, 0);
+createString(marionetteTemplate, 30, 'ropehead', 'head', 0, 1.5, 0);
+createString(marionetteTemplate, 30, 'ropelwrist', 'lwrist', -.13, 1.02, 0);
+createString(marionetteTemplate, 30, 'roperwrist', 'rwrist', .13, 1.02, 0);
 
-init(struct);
+// animation loop
+let lastTime = 0;
+let firstTime = true;
+const run = (currentTime: number) => {
+	requestAnimationFrame(run);
+
+	let dt = (currentTime - lastTime) / 1000;
+	const runs = 20;
+	if (firstTime) {
+		firstTime = false;
+		dt = .001666 / runs;
+	}
+	if (dt > .3) {
+		console.error(dt);
+		dt = 0.016 / runs;
+	}
+	lastTime = currentTime;
+	// verlet integration
+	for (let i = 0; i < runs; i++) {
+		// manage pointer
+		/*
+		if (pointer.isDown) {
+			if (!drag) {
+				// determine which sphere is under the pointer ?
+				let dmax = 10000,
+					over = null;
+				viewProj.multiply(camProj, camView);
+				for (let n of nodes) {
+					point.transformMat4(n.pos, viewProj);
+					let x = Math.round(((point.x + 1) / 2.0) * canvas.width);
+					let y = Math.round(((1 - point.y) / 2.0) * canvas.height);
+					let dx = Math.abs(pointer.x - x);
+					let dy = Math.abs(pointer.y - y);
+					let d = Math.sqrt(dx * dx + dy * dy);
+					if (d < dmax) {
+						dmax = d;
+						over = n;
+					}
+				}
+				canvas.elem.style.cursor = 'move';
+				drag = over;
+				dragFreeness = drag.free;
+				drag.free = false;
+				rgb.copy(drag.rgb);
+				//if (drag.radius !== 0.1) drag.rgb.set(2, 1, 0);
+			}
+			// dragging
+			let x = (2.0 * pointer.x / canvas.width - 1) * 0.55 * camDist * gl.aspect;
+			let y = (-2.0 * pointer.y / canvas.height + 1) * 0.55 * camDist;
+			tmpVec3.copy(drag.pos);
+			drag.pos.x += (x - drag.pos.x) / runs;
+			drag.pos.y += (y - drag.pos.y) / runs;
+			drag.pos.z *= 0.99;
+			drag.old.copy(tmpVec3);
+		} else {
+			// stop dragging
+			if (drag) {
+				canvas.elem.style.cursor = 'pointer';
+				drag.rgb.copy(rgb);
+				drag.free = dragFreeness;
+				drag = null;
+			}
+		}
+		*/
+		// integration
+		for (let a in assemblies) {
+			let ass = assemblies[a];
+			for (let n of ass.nodes) {
+				n.integrate(dt / runs);
+				n.checkPlane(-1);
+			}
+			for (let n of ass.constraints) {
+				n.solve();
+			}	
+		}
+	}
+	Renderer.drawScene(assemblies);
+}
+
+run(0);
