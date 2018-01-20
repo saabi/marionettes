@@ -444,6 +444,8 @@ createController(marionetteTemplate, controllerCenter, controllerVectors);
 createRope(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter');
 createRope(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft');
 createRope(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright');
+createRope(marionetteTemplate, 30, 'ropelknee', 'lknee', 'cleft1');
+createRope(marionetteTemplate, 30, 'roperknee', 'rknee', 'cright1');
 
 // animation loop
 let lastTime = 0;
