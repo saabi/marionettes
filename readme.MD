@@ -20,6 +20,6 @@ npm start
 
 ## Using it
 
-Also needs improvement but for now the server is running on port 80 so just navigate with your browser to `http://localhost` and with your phone to `http://(server's IP address)/phone.html`
+Also needs improvement but for now the server is running on port 80 so just navigate with your browser to `http://(server's IP address)` and with your phone to `http://(server's IP address)/phone.html`
 
 Now just move your phone!
