@@ -39,7 +39,7 @@ class Device {
             this.rot.x = alpha;
             this.rot.y = beta;
             this.rot.z = gamma;
-            target.setRotation(beta, alpha, gamma);
+            target.setRotation(alpha, beta, gamma);
             rotDisplay.innerText = (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
         }
 
@@ -76,14 +76,18 @@ class Device {
         window.addEventListener("deviceorientation", handleOrientation, true);
         window.addEventListener("devicemotion", handleMotion, true);
         window.addEventListener("touchend", handleTouch, true);
-
     }
 }
 
 var data = new PhoneData();
 var phone = new Device(data);
+var originOrientation = {x:0,y:0,z:0};
+let element = document.getElementById('thing');
 
-let element = document.getElementById('thing')
+let resetButton = document.getElementById('resetButton');
+resetButton.onclick = () => {
+    originOrientation = {x: phone.rot.x, y: phone.rot.y+90, z: phone.rot.z };
+}
 
 var socket = io();
 socket.on('connect', () => {
@@ -93,16 +97,17 @@ socket.on('connect', () => {
 function update() {
     data.update();
 
+    let rot = {x: phone.rot.x - originOrientation.x, y: phone.rot.y - originOrientation.y, z: phone.rot.z - originOrientation.z }
     var message = {
         acc: phone.acc,
-        rot: phone.rot
+        rot: rot
     }
     socket.emit('message', message);
 
     var p = data.pos;
     var r = data.rot;
 
-    var s = 'rotateZ(' + r.x + 'deg) rotateY(' + -r.y + 'deg) rotateX(' + r.z + 'deg) translate3d(' + (p.x - 25) + 'px,' + (p.y - 40) + 'px,' + p.z + 'px)';
+    var s = 'rotateX(' + r.y + 'deg) rotateY(' + -r.z + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
     element.style.transform = s;
 }
 

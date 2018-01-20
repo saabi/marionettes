@@ -67,7 +67,7 @@ function update(motion: any) {
 	var p = thing.pos;
 	var r = thing.rot;
 
-	var s = 'rotateZ(' + r.x + 'deg) rotateY(' + -r.y + 'deg) rotateX(' + r.z + 'deg) translate3d(' + (p.x - 50) + 'px,' + (p.y - 80) + 'px,' + p.z + 'px)';
+	var s = 'rotateX(' + (r.z) + 'deg) rotateY(' + -r.y + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
 	element.style.transform = s;
 }
 
