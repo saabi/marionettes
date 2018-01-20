@@ -12,8 +12,14 @@ interface Marionette {
 interface MarionetteList {
 	[id: string]: Marionette;
 }
+interface ControllerMapping {
+	[name:string]: number;
+}
+interface ControllerMappingList {
+	[id:string]: ControllerMapping;
+}
 const assemblies: AssemblyList = {};
-const controllers: AssemblyList = {};
+const controllers: ControllerMappingList = {};
 
 let marionettes: MarionetteList = {};
 let numMarionettes = 0;
@@ -31,14 +37,29 @@ function addMarionette(id: string) {
 		phoneData: new PhoneData,
 		assembly: new Assembly(marionetteTemplate, new Vec3(0,0,0))
 	}
+	let mapping: ControllerMapping = {
+		ccenter:-1,
+		ctop:-1,
+		cright:-1,
+		cleft:-1,
+		cright1:-1,
+		cleft1:-1,
+		cfront:-1,
+		cback:-1
+	}
+	let ns = puppet.assembly.nodes
+	for (let i = 0; i < ns.length; i++) {
+		if (ns[i].name in mapping)
+			mapping[ns[i].name] = i;
+	}
 	numMarionettes++;
 	puppet.element.id = id;
 	puppet.element.className = 'thing'
 	document.body.appendChild(puppet.element);
 	marionettes[id] = puppet;
 	assemblies[id] = puppet.assembly;
-	//controllers[id] = new Assembly(controlTemplate, new Vec3(0,0,0));
-	//assemblies[id+'c'] = controllers[id];
+	controllers[id] = mapping;
+
 	let i = 0;
 	for (let j in marionettes) {
 		marionettes[j].element.style.left = left(document.body.offsetWidth, numMarionettes, i++) + 'px';
@@ -49,6 +70,7 @@ function removeMarionette(id: string) {
 	document.getElementById(id).remove();
 	delete marionettes[id];
 	delete assemblies[id];
+	delete controllers[id];
 	numMarionettes--;
 	let i = 0;
 	for (let j in marionettes) {
@@ -68,30 +90,39 @@ function update(motion: any) {
 	thing.update();
 
 	let a = assemblies[motion.id];
-	let ccenter = a.nodes.filter((n) => n.name = 'ccenter')[0];
+	let c = controllers[motion.id];
+	let ccenter = a.nodes[c.ccenter];
 	ccenter.pos.x = -thing.pos.x/100;
 	ccenter.pos.y = thing.pos.z/100+1.5;
 	ccenter.pos.z = thing.pos.y/100;
-	let ctop = a.nodes.filter((n) => n.name = 'ctop')[0];
+	let ctop = a.nodes[c.ctop];
 	ctop.pos.x = -thing.pos.x/100;
-	ctop.pos.y = thing.pos.z/100+1.63;
+	ctop.pos.y = thing.pos.z/100+2;
 	ctop.pos.z = thing.pos.y/100;
-	let cleft = a.nodes.filter((n) => n.name = 'cleft')[0];
-	cleft.pos.x = -thing.pos.x/100-0.13;
+	let cleft = a.nodes[c.cleft];
+	cleft.pos.x = -thing.pos.x/100-1;
 	cleft.pos.y = thing.pos.z/100+1.5;
 	cleft.pos.z = thing.pos.y/100;
-	let cright = a.nodes.filter((n) => n.name = 'cright')[0];
-	cright.pos.x = -thing.pos.x/100+0.13;
+	let cright = a.nodes[c.cright];
+	cright.pos.x = -thing.pos.x/100+1;
 	cright.pos.y = thing.pos.z/100+1.5;
 	cright.pos.z = thing.pos.y/100;
-	let cback = a.nodes.filter((n) => n.name = 'cback')[0];
+	let cleft1 = a.nodes[c.cleft];
+	cleft1.pos.x = -thing.pos.x/100-1;
+	cleft1.pos.y = thing.pos.z/100+1.5;
+	cleft1.pos.z = thing.pos.y/100+0.4;
+	let cright1 = a.nodes[c.cright];
+	cright1.pos.x = -thing.pos.x/100+1;
+	cright1.pos.y = thing.pos.z/100+1.5;
+	cright1.pos.z = thing.pos.y/100+0.4;
+	let cback = a.nodes[c.cback];
 	cback.pos.x = -thing.pos.x/100;
 	cback.pos.y = thing.pos.z/100+1.5;
-	cback.pos.z = thing.pos.y/100-0.13;
-	let cfront = a.nodes.filter((n) => n.name = 'cfront')[0];
+	cback.pos.z = thing.pos.y/100-1;
+	let cfront = a.nodes[c.cfront];
 	cfront.pos.x = -thing.pos.x/100;
 	cfront.pos.y = thing.pos.z/100+1.5;
-	cfront.pos.z = thing.pos.y/100+0.13;
+	cfront.pos.z = thing.pos.y/100+1;
 	var p = thing.pos;
 	var r = thing.rot;
 
@@ -122,62 +153,19 @@ const lightStruct: AssemblyParams = {
 	},
 	constraints: []
 }
+
+const controllerCenter = new Vec3(0, 1.5, 0);
+const controllerVectors = {
+	ctop: new Vec3(0,0.5,0),
+	cleft: new Vec3(-1,0,0),
+	cright: new Vec3(1,0,0),
+	cleft1: new Vec3(-1,0,0.5),
+	cright1: new Vec3(1,0,0.5),
+	cback: new Vec3(0,0,-1),
+	cfront: new Vec3(0,0,1)
+}
 const marionetteTemplate: AssemblyParams = {
 	nodes: {
-		ccenter: {
-			x: 0,
-			y: 1.5,
-			z: 0,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
-		ctop: {
-			x: 0,
-			y: 1.63,
-			z: 0,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
-		cleft: {
-			x: -1,
-			y: 1.5,
-			z: 0,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
-		cright: {
-			x: 1,
-			y: 1.5,
-			z: 0,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
-		cback: {
-			x: 0,
-			y: 1.5,
-			z: -1,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
-		cfront: {
-			x: 0,
-			y: 1.5,
-			z: 1,
-			w: 0.1,
-			mass: 1.0,
-			color: [1.5, 1.2, 0.8],
-			free: false
-		},
 		head: {
 			x: 0,
 			y: 1 - 1,
@@ -332,19 +320,6 @@ const marionetteTemplate: AssemblyParams = {
 		}
 	},
 	constraints: [
-		["ccenter", "ctop", 0.01],
-		["ccenter", "cleft", 0.01],
-		["ccenter", "cright", 0.01],
-		["ccenter", "cback", 0.01],
-		["ccenter", "cfront", 0.01],
-		["ctop", "cleft", 0.01],
-		["ctop", "cright", 0.01],
-		["ctop", "cback", 0.01],
-		["ctop", "cfront", 0.01],
-		["cback", "cleft", 0.01],
-		["cback", "cright", 0.01],
-		["cleft", "cfront", 0.01],
-		["cright", "cfront", 0.01],
 		["head", "s1", 0.01],
 		["s1", "s2", 0.01],
 		["s2", "s3", 0.01],
@@ -417,10 +392,55 @@ function createRope(struct: AssemblyParams, sections: number, name: string, from
 	struct.constraints[struct.constraints.length - 1][1] = to;
 	struct.constraints.push([from, name+'0', 0.005]);
 }
+function createController(template: AssemblyParams, center: Vec3, vectors: any) {
+	template.nodes.ccenter = {
+		x: center.x,
+		y: center.y,
+		z: center.z,
+		w: 0.1,
+		mass: 1.0,
+		color: [1.5, 1.2, 0.8],
+		free: false
+	};
+	for (let n in vectors) {
+		let v = <Vec3>vectors[n];
+		template.nodes[n] = {
+			x: v.x + center.x,
+			y: v.y + center.y,
+			z: v.z + center.z,
+			w: 0.1,
+			mass: 1.0,
+			color: [1.5, 1.2, 0.8],
+			free: false
+		}
+	}
+	template.constraints.push(
+		["ccenter", "ctop", 0.01],
+		["ccenter", "cleft", 0.01],
+		["ccenter", "cright", 0.01],
+		["ccenter", "cleft1", 0.01],
+		["ccenter", "cright1", 0.01],
+		["ccenter", "cback", 0.01],
+		["ccenter", "cfront", 0.01],
+		["ctop", "cleft", 0.01],
+		["ctop", "cright", 0.01],
+		["ctop", "cleft1", 0.01],
+		["ctop", "cright1", 0.01],
+		["ctop", "cback", 0.01],
+		["ctop", "cfront", 0.01],
+		["cback", "cleft", 0.01],
+		["cback", "cright", 0.01],
+		["cleft", "cleft1", 0.01],
+		["cright", "cright1", 0.01],
+		["cleft1", "cfront", 0.01],
+		["cright1", "cfront", 0.01]
+	);
+}
 
 //createString(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter', 0, 1.5, 0);
 //createString(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft', -.13, 1.5, 0);
 //createString(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright', .13, 1.5, 0);
+createController(marionetteTemplate, controllerCenter, controllerVectors);
 createRope(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter');
 createRope(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft');
 createRope(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright');
