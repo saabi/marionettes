@@ -183,7 +183,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 1 - 1,
 			z: 0,
 			w: 0.1,
-			mass: 1.0,
+			mass: 5.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s1: {
@@ -191,7 +191,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.92 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s2: {
@@ -199,7 +199,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.88 - 1,
 			z: -0.05,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s3: {
@@ -207,7 +207,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.75 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		s4: {
@@ -215,7 +215,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.64 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s5: {
@@ -223,7 +223,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.58 - 1,
 			z: 0.04,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s6: {
@@ -231,7 +231,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.52 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lshoulder: {
@@ -239,7 +239,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.91 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lelbow: {
@@ -247,7 +247,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.7 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lwrist: {
@@ -255,7 +255,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.52 - 1 + 0.48,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rshoulder: {
@@ -263,7 +263,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.91 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		relbow: {
@@ -271,7 +271,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.7 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rwrist: {
@@ -279,7 +279,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.52 - 1 + 0.48,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lhip: {
@@ -287,7 +287,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.58 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lknee: {
@@ -295,7 +295,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.29 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lankle: {
@@ -303,7 +303,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.1 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rhip: {
@@ -311,7 +311,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.58 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rknee: {
@@ -319,7 +319,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.29 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rankle: {
@@ -327,7 +327,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.1 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 1.0,
+			mass: 5.0,
 			color: [0.8, 1.2, 1.5]
 		}
 	},
