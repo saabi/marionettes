@@ -31,10 +31,10 @@ app.use(async (ctx, next) => {
 
 let router = new Router();
 
-app.use(bodyParser());
-app.use(router.routes());
-app.use(router.allowedMethods());
-app.use(trailingSlashEnforcer);
+//app.use(bodyParser());
+//app.use(router.routes());
+//app.use(router.allowedMethods());
+//app.use(trailingSlashEnforcer);
 app.use(convert(mount('/src', fileServer('src')))); // TODO: Secure this item.
 app.use(convert(fileServer('public')));
 
