@@ -42,7 +42,7 @@ export namespace Renderer {
     const camProj = gl.mat4();
     const camView = gl.mat4();
 //    const viewProj = gl.mat4();
-    const light = new Vec3(0, 1.2, 0);
+    const light = new Vec3(1, 1.7, 0);
     
 
     const planeGeom = gl.drawable(gl.plane(60));
