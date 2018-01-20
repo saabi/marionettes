@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client';
-import { Vec3 } from 'VecMath';
+import { Vec3, Mat4 } from 'VecMath';
 import { AssemblyParams, Assembly } from 'verlet3';
 import { Renderer, AssemblyList } from 'Renderer';
 import { PhoneData } from 'thing';
@@ -55,7 +55,7 @@ function addMarionette(id: string) {
 	numMarionettes++;
 	puppet.element.id = id;
 	puppet.element.className = 'thing'
-	document.body.appendChild(puppet.element);
+	//document.body.appendChild(puppet.element);
 	marionettes[id] = puppet;
 	assemblies[id] = puppet.assembly;
 	controllers[id] = mapping;
@@ -91,43 +91,26 @@ function update(motion: any) {
 
 	let a = assemblies[motion.id];
 	let c = controllers[motion.id];
-	let ccenter = a.nodes[c.ccenter];
-	ccenter.pos.x = -thing.pos.x/100;
-	ccenter.pos.y = thing.pos.z/100+1.5;
-	ccenter.pos.z = thing.pos.y/100;
-	let ctop = a.nodes[c.ctop];
-	ctop.pos.x = -thing.pos.x/100;
-	ctop.pos.y = thing.pos.z/100+2;
-	ctop.pos.z = thing.pos.y/100;
-	let cleft = a.nodes[c.cleft];
-	cleft.pos.x = -thing.pos.x/100-1;
-	cleft.pos.y = thing.pos.z/100+1.5;
-	cleft.pos.z = thing.pos.y/100;
-	let cright = a.nodes[c.cright];
-	cright.pos.x = -thing.pos.x/100+1;
-	cright.pos.y = thing.pos.z/100+1.5;
-	cright.pos.z = thing.pos.y/100;
-	let cleft1 = a.nodes[c.cleft];
-	cleft1.pos.x = -thing.pos.x/100-1;
-	cleft1.pos.y = thing.pos.z/100+1.5;
-	cleft1.pos.z = thing.pos.y/100+0.4;
-	let cright1 = a.nodes[c.cright];
-	cright1.pos.x = -thing.pos.x/100+1;
-	cright1.pos.y = thing.pos.z/100+1.5;
-	cright1.pos.z = thing.pos.y/100+0.4;
-	let cback = a.nodes[c.cback];
-	cback.pos.x = -thing.pos.x/100;
-	cback.pos.y = thing.pos.z/100+1.5;
-	cback.pos.z = thing.pos.y/100-1;
-	let cfront = a.nodes[c.cfront];
-	cfront.pos.x = -thing.pos.x/100;
-	cfront.pos.y = thing.pos.z/100+1.5;
-	cfront.pos.z = thing.pos.y/100+1;
 	var p = thing.pos;
+	var p1 = new Vec3(controllerCenter.x+p.x/100, controllerCenter.y+p.z/100, controllerCenter.z+p.y/100);
 	var r = thing.rot;
+	positionController(a, c, controllerVectors, p1, r);
 
 	var s = 'rotateX(' + (r.z) + 'deg) rotateY(' + -r.y + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
 	element.style.transform = s;
+}
+function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
+	let mat = new Mat4();
+	mat.trans(-pos.x, pos.y, pos.z);
+	mat.rotatex(rot.z);
+	mat.rotatey(-rot.x);
+	mat.rotatez(rot.y);
+	for (let n in vectors) {
+		let v = <Vec3>vectors[n];
+		let p = assembly.nodes[mapping[n]].pos
+		p.transformMat4(v, mat);
+	}
+	assembly.nodes[mapping['ccenter']].pos.set(-pos.x, pos.y, pos.z);
 }
 
 let socket = io();
