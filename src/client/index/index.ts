@@ -340,7 +340,7 @@ function interpolate(v1: number, v2: number, p: number) {
 function createString(struct: AssemblyParams, sections: number, name: string, attachTo: string, x: number, y: number, z: number) {
 	let destNode = struct.nodes[attachTo];
 	for (let i = 0; i < sections; i++) {
-		let p = i / sections;
+		let p = (i+1) / (sections+2);
 		struct.nodes[name + i] = {
 			x: interpolate(x, destNode.x, p),
 			y: interpolate(y, destNode.y, p),
