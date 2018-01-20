@@ -1,10 +1,10 @@
 {
 	apps : [{
-		name : 'culturanomade',
+		name : 'marionettes',
 		script : 'lib/server.js',
 		watch : false,
                 env : {
-                        "PORT" : "1665"
+                        "PORT" : "3021"
                 }
 	}]
 }

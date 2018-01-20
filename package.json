@@ -1,7 +1,7 @@
 {
-  "name": "culturanomade.com",
+  "name": "marionettes.ferreyrapons.com",
   "version": "0.1.0",
-  "description": "Sitio Cultura Nomade",
+  "description": "WebSockets / WebGL / UI Demo",
   "main": "server.js",
   "scripts": {
     "start": "node --harmony lib/server.js",
