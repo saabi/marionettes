@@ -86,7 +86,7 @@ let element = document.getElementById('thing');
 
 let resetButton = document.getElementById('resetButton');
 resetButton.onclick = () => {
-    originOrientation = {x: phone.rot.x, y: phone.rot.y+90, z: phone.rot.z };
+    originOrientation = {x: phone.rot.x, y: phone.rot.y, z: phone.rot.z };
 }
 
 var socket = io();
