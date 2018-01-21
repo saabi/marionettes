@@ -1,6 +1,6 @@
 import * as io from 'socket.io-client';
 import { Vec3, Mat4 } from 'VecMath';
-import { AssemblyParams, Assembly } from 'verlet3';
+import { AssemblyParams, Assembly } from 'VerletIntegration';
 import { Renderer, AssemblyList } from 'Renderer';
 import { PhoneData } from 'thing';
 
