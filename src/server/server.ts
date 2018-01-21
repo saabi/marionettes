@@ -2,12 +2,9 @@ const PORT = process.env.PORT || 80;
 
 import http = require('http');
 import * as Koa from "koa";
-import * as bodyParser from 'koa-bodyparser';
-import * as Router from 'koa-router';
 import * as fileServer from 'koa-static';
 import * as mount from 'koa-mount';
 const convert = require('koa-convert')
-const trailingSlashEnforcer = require('koa-add-trailing-slashes')();
 
 import * as IO from 'socket.io';
 
@@ -29,12 +26,6 @@ app.use(async (ctx, next) => {
   }
 });
 
-let router = new Router();
-
-//app.use(bodyParser());
-//app.use(router.routes());
-//app.use(router.allowedMethods());
-//app.use(trailingSlashEnforcer);
 app.use(convert(mount('/src', fileServer('src')))); // TODO: Secure this item.
 app.use(convert(fileServer('public')));
 
