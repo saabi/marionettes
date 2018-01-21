@@ -14,6 +14,7 @@ Once that's done:
 
 ```
 npm i
+bower install
 ./build
 npm start
 ```
