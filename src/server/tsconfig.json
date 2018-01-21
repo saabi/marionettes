@@ -14,7 +14,6 @@
     "sourceMap": true
   },
   "files": [
-    "server.ts",
-    "api.ts"
+    "server.ts"
   ]
 }
