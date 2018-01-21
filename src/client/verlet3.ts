@@ -1,5 +1,5 @@
 //import { WebGL, Vec3, Mat4, Canvas, Pointer, Shader } from 'WebGLFramework';
-import { Vec3, Mat4} from 'VecMath';
+import { Vec3, Mat4} from './VecMath';
 
 var friction = 0.001;
 

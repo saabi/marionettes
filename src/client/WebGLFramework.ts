@@ -3,7 +3,7 @@
 * https://github.com/pyalot/soft-shadow-mapping/blob/master/framework.coffee
 */
 
-import {Vec3, Mat3, Mat4} from 'VecMath';
+import {Vec3, Mat3, Mat4} from './VecMath';
 
 declare global {
 	interface Document {

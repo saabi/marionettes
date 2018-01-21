@@ -1,6 +1,6 @@
-import { WebGL, Canvas, Pointer, Shader } from 'WebGLFramework';
-import { Node, Constraint, Assembly } from 'verlet3';
-import { Vec3, Mat4 } from 'VecMath';
+import { WebGL, Canvas, Pointer, Shader } from './WebGLFramework';
+import { Node, Constraint, Assembly } from './verlet3';
+import { Vec3, Mat4 } from './VecMath';
 
 export interface AssemblyList {
     [id:string]: Assembly;

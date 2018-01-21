@@ -1,4 +1,4 @@
-import { Vec3 } from 'VecMath';
+import { Vec3 } from './VecMath';
 
 export class PhoneData {
     pos = new Vec3;
