@@ -50,11 +50,14 @@ export namespace Renderer {
     const tubeGeom = gl.drawable(gl.cylinder(1, 36));
 
     const pointer = new Pointer(canvas);
-    var camDist = 3;
+    var camDist = 10;
 
     // set
     export function setLight(v: Vec3) {
         light.set(v.x, v.y, v.z);
+    }
+    export function setCamDist(d: number) {
+        camDist = d;
     }
     // draw
     export function drawNode(node: Node, shader: Shader) {
