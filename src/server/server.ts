@@ -40,6 +40,7 @@ interface Sockets {
 
 let desktops: Sockets = {};
 let phones: Sockets = {};
+let slots: (string|null)[] = [];
 
 io.on('connection', socket => {
   console.log(`Client  connected. ${socket.id}`)
@@ -52,10 +53,21 @@ io.on('connection', socket => {
 
         phones[socket.id] = socket;
 
-        for(let i in desktops) {
-          desktops[i].emit('phoneadded', socket.id);
+        let firstEmptySlot = slots.indexOf(null);
+        if (firstEmptySlot === -1) {
+          firstEmptySlot = slots.length;
+          slots.push(socket.id);
         }
+        else 
+          slots[firstEmptySlot] = socket.id;
 
+        let msg = {
+          id: socket.id,
+          slot: firstEmptySlot
+        }
+        for(let i in desktops) {
+          desktops[i].emit('phoneadded', msg);
+        }
 
         socket.on('message', (msg:any) => {
           msg.id = socket.id;
@@ -69,7 +81,11 @@ io.on('connection', socket => {
         console.log('Desktop connected.');
         desktops[socket.id] = socket;
         for (let i in phones) {
-          socket.emit('phoneadded', phones[i].id);
+            let msg = {
+              id: i,
+              slot: slots.indexOf(i)
+            }
+            socket.emit('phoneadded', msg);
         }
         break;
     }
@@ -83,6 +99,11 @@ io.on('connection', socket => {
     } else if (id in phones) {
       console.log(`Phone disconnected.`);
       delete phones[id];
+
+      let slot = slots.indexOf(id);
+      if (slot > -1)
+        slots[slot] = null;
+
       for(let i in desktops) {
         desktops[i].emit('phoneremoved', id);
       }

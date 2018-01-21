@@ -8,6 +8,7 @@ interface Marionette {
 	element: HTMLElement;
 	phoneData: PhoneData;
 	assembly: Assembly;
+	origin: Vec3;
 }
 interface MarionetteList {
 	[id: string]: Marionette;
@@ -17,6 +18,11 @@ interface ControllerMapping {
 }
 interface ControllerMappingList {
 	[id:string]: ControllerMapping;
+}
+
+interface PhoneAddedMessage {
+	id: string;
+	slot: number;
 }
 const assemblies: AssemblyList = {};
 const controllers: ControllerMappingList = {};
@@ -28,14 +34,19 @@ function left(width: number, count: number, index: number) {
 	let mid = width / count / 2;
 	return mid + index * width / count;
 }
-function addMarionette(id: string) {
-	console.log(`phone added: ${id}`)
+function addMarionette(msg: PhoneAddedMessage) {
+	console.log(`phone added: ${msg.id} - ${msg.slot}`);
+	let id = msg.id;
+	let slot = msg.slot;
 	let thing = new PhoneData();
 
-	let puppet: Marionette = {
+	let p = Math.floor(1+slot/2) * (slot%2)===0 ? -1 : 1; 
+	let origin = new Vec3(p, 0, 0);
+	let marionette: Marionette = {
 		element: document.createElement('div'),
 		phoneData: new PhoneData,
-		assembly: new Assembly(marionetteTemplate, new Vec3(0,0,0))
+		assembly: new Assembly(marionetteTemplate, origin),
+		origin: origin
 	}
 	let mapping: ControllerMapping = {
 		ccenter:-1,
@@ -47,17 +58,17 @@ function addMarionette(id: string) {
 		cfront:-1,
 		cback:-1
 	}
-	let ns = puppet.assembly.nodes
+	let ns = marionette.assembly.nodes
 	for (let i = 0; i < ns.length; i++) {
 		if (ns[i].name in mapping)
 			mapping[ns[i].name] = i;
 	}
 	numMarionettes++;
-	puppet.element.id = id;
-	puppet.element.className = 'thing'
+	marionette.element.id = id;
+	marionette.element.className = 'thing'
 	//document.body.appendChild(puppet.element);
-	marionettes[id] = puppet;
-	assemblies[id] = puppet.assembly;
+	marionettes[id] = marionette;
+	assemblies[id] = marionette.assembly;
 	controllers[id] = mapping;
 
 	let i = 0;
@@ -67,7 +78,7 @@ function addMarionette(id: string) {
 }
 function removeMarionette(id: string) {
 	console.log(`phone removed: ${id}`)
-	document.getElementById(id).remove();
+	//document.getElementById(id).remove();
 	delete marionettes[id];
 	delete assemblies[id];
 	delete controllers[id];
@@ -82,8 +93,10 @@ function update(motion: any) {
 		return
 	}
 
-	let thing = marionettes[motion.id].phoneData;
-	let element = marionettes[motion.id].element;
+	let marionette = marionettes[motion.id];
+	let thing = marionette.phoneData;
+	let element = marionette.element;
+	let origin = marionette.origin;
 
 	thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
 	thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
@@ -92,7 +105,11 @@ function update(motion: any) {
 	let a = assemblies[motion.id];
 	let c = controllers[motion.id];
 	var p = thing.pos;
-	var p1 = new Vec3(controllerCenter.x+p.x/100, controllerCenter.y+p.z/100, controllerCenter.z+p.y/100);
+	var p1 = new Vec3(
+		origin.x + controllerCenter.x + p.x/100,
+		origin.y + controllerCenter.y + p.z/100,
+		origin.z + controllerCenter.z + p.y/100
+	);
 	var r = thing.rot;
 	positionController(a, c, controllerVectors, p1, r);
 
