@@ -29,6 +29,7 @@ Now just move your phone!
 
 ## TODO
 
+  * Fix camera position on initial load.
   * Camera should adjust to include marionettes from all users.
   * Use a QR code on the desktop to make it easier to connect with a mobile device.
   * Add a text bubble to each marionette. The text should be set from the mobile device.
