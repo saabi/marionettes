@@ -30,6 +30,7 @@ Now just move your phone!
 ## TODO
 
   * Camera should adjust to include marionettes from all users.
+  * Use a QR code on the desktop to make it easier to connect with a mobile device.
   * Add a text bubble to each marionette. The text should be set from the mobile device.
   * Use the touch screen on a mobile device to control the position on stage and to pull on the strings of the marionette. <img src='https://raw.githubusercontent.com/saabi/marionettes/master/public/img/controller-layout.png' width='356'>
   * Switch to Three.js in order to add skinning.
