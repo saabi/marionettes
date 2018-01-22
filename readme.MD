@@ -25,3 +25,11 @@ npm start
 Also needs improvement but for now the server is running on port 80 (you can also start it on another port by setting the PORT environment variable to something else) so just navigate with your browser to `http://(server's IP address)` and with your phone to `http://(server's IP address)/phone.html`
 
 Now just move your phone!
+
+
+## TODO
+
+  * Camera should adjust to include marionettes from all users.
+  * Add a text bubble to each marionette. The text should be set from the mobile device.
+  * Use the touch screen on a mobile device to control the position on stage and to pull on the strings of the marionette. <img src='https://raw.githubusercontent.com/saabi/marionettes/master/public/img/controller-layout.png' width='356'>
+  * Switch to Three.js in order to add skinning.
