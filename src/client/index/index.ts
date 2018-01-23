@@ -156,11 +156,10 @@ const lightStruct: AssemblyParams = {
 
 const controllerCenter = new Vec3(0, 1.5, 0);
 const controllerVectors = {
-	ctop: new Vec3(0,0.5,0),
-	cleft: new Vec3(-1,0,0),
-	cright: new Vec3(1,0,0),
-	cleft1: new Vec3(-1,0,0.5),
-	cright1: new Vec3(1,0,0.5),
+	cleft1: new Vec3(-1,0,0),
+	cright1: new Vec3(1,0,0),
+	cleft: new Vec3(-1,0,0.5),
+	cright: new Vec3(1,0,0.5),
 	cback: new Vec3(0,0,-1),
 	cfront: new Vec3(0,0,1)
 }
@@ -415,25 +414,12 @@ function createController(template: AssemblyParams, center: Vec3, vectors: any) 
 		}
 	}
 	template.constraints.push(
-		["ccenter", "ctop", 0.01],
 		["ccenter", "cleft", 0.01],
 		["ccenter", "cright", 0.01],
 		["ccenter", "cleft1", 0.01],
 		["ccenter", "cright1", 0.01],
 		["ccenter", "cback", 0.01],
-		["ccenter", "cfront", 0.01],
-		["ctop", "cleft", 0.01],
-		["ctop", "cright", 0.01],
-		["ctop", "cleft1", 0.01],
-		["ctop", "cright1", 0.01],
-		["ctop", "cback", 0.01],
-		["ctop", "cfront", 0.01],
-		["cback", "cleft", 0.01],
-		["cback", "cright", 0.01],
-		["cleft", "cleft1", 0.01],
-		["cright", "cright1", 0.01],
-		["cleft1", "cfront", 0.01],
-		["cright1", "cfront", 0.01]
+		["ccenter", "cfront", 0.01]
 	);
 }
 
