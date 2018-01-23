@@ -423,9 +423,6 @@ function createController(template: AssemblyParams, center: Vec3, vectors: any) 
 	);
 }
 
-//createString(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter', 0, 1.5, 0);
-//createString(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft', -.13, 1.5, 0);
-//createString(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright', .13, 1.5, 0);
 createController(marionetteTemplate, controllerCenter, controllerVectors);
 createRope(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter');
 createRope(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft');
@@ -452,51 +449,6 @@ const run = (currentTime: number) => {
 	lastTime = currentTime;
 	// verlet integration
 	for (let i = 0; i < runs; i++) {
-		// manage pointer
-		/*
-		if (pointer.isDown) {
-			if (!drag) {
-				// determine which sphere is under the pointer ?
-				let dmax = 10000,
-					over = null;
-				viewProj.multiply(camProj, camView);
-				for (let n of nodes) {
-					point.transformMat4(n.pos, viewProj);
-					let x = Math.round(((point.x + 1) / 2.0) * canvas.width);
-					let y = Math.round(((1 - point.y) / 2.0) * canvas.height);
-					let dx = Math.abs(pointer.x - x);
-					let dy = Math.abs(pointer.y - y);
-					let d = Math.sqrt(dx * dx + dy * dy);
-					if (d < dmax) {
-						dmax = d;
-						over = n;
-					}
-				}
-				canvas.elem.style.cursor = 'move';
-				drag = over;
-				dragFreeness = drag.free;
-				drag.free = false;
-				rgb.copy(drag.rgb);
-				//if (drag.radius !== 0.1) drag.rgb.set(2, 1, 0);
-			}
-			// dragging
-			let x = (2.0 * pointer.x / canvas.width - 1) * 0.55 * camDist * gl.aspect;
-			let y = (-2.0 * pointer.y / canvas.height + 1) * 0.55 * camDist;
-			tmpVec3.copy(drag.pos);
-			drag.pos.x += (x - drag.pos.x) / runs;
-			drag.pos.y += (y - drag.pos.y) / runs;
-			drag.pos.z *= 0.99;
-			drag.old.copy(tmpVec3);
-		} else {
-			// stop dragging
-			if (drag) {
-				canvas.elem.style.cursor = 'pointer';
-				drag.rgb.copy(rgb);
-				drag.free = dragFreeness;
-				drag = null;
-			}
-		}
-		*/
 		// integration
 		for (let a in assemblies) {
 			let ass = assemblies[a];
