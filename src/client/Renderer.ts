@@ -95,7 +95,7 @@ export namespace Renderer {
             drawConstraint(c, displayShader);
         }
     }
-    export function drawScene(assemblies: AssemblyList) {
+    export function drawScene(assemblies: AssemblyList, camera:Vec3) {
         // webGL frame rendering setup
         gl
             .adjustSize()
@@ -116,7 +116,7 @@ export namespace Renderer {
         camDist += 0.1 * ((pointer.z / 3) - camDist);
         camView
             .ident()
-            .trans(0, 0, -camDist);
+            .trans(camera.x, camera.y, camera.z);
 
         // set uniforms
         displayShader

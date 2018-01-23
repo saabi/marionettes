@@ -9,6 +9,7 @@ interface Marionette {
 	phoneData: PhoneData;
 	assembly: Assembly;
 	origin: Vec3;
+	position: Vec3;
 }
 interface MarionetteList {
 	[id: string]: Marionette;
@@ -46,7 +47,8 @@ function addMarionette(msg: PhoneAddedMessage) {
 		element: document.createElement('div'),
 		phoneData: new PhoneData,
 		assembly: new Assembly(marionetteTemplate, origin),
-		origin: origin
+		origin: origin,
+		position: origin
 	}
 	let mapping: ControllerMapping = {
 		ccenter:-1,
@@ -438,7 +440,13 @@ const run = (currentTime: number) => {
 			}	
 		}
 	}
-	Renderer.drawScene(assemblies);
+	let minx = Number.POSITIVE_INFINITY, maxx = Number.NEGATIVE_INFINITY;
+	for (let i in marionettes) {
+		let a = marionettes[i];
+		minx = minx > a.position.x ? a.position.x : minx;
+		maxx = maxx < a.position.x ? a.position.x : maxx;
+	}
+	Renderer.drawScene(assemblies, new Vec3((minx+maxx)/2, -1, -5-(maxx-minx)));
 }
 
 run(0);
