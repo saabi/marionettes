@@ -50,7 +50,6 @@ function addMarionette(msg: PhoneAddedMessage) {
 	}
 	let mapping: ControllerMapping = {
 		ccenter:-1,
-		ctop:-1,
 		cright:-1,
 		cleft:-1,
 		cright1:-1,
