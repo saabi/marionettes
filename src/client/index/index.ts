@@ -204,22 +204,6 @@ const marionetteTemplate: AssemblyParams = {
 			mass: 15.0,
 			color: [1.5, 1.2, 0.8]
 		},
-		s5: {
-			x: 0,
-			y: 0.58 - 1,
-			z: 0.04,
-			w: 0.03,
-			mass: 15.0,
-			color: [1.5, 1.2, 0.8]
-		},
-		s6: {
-			x: 0,
-			y: 0.52 - 1,
-			z: 0,
-			w: 0.03,
-			mass: 15.0,
-			color: [0.8, 1.2, 1.5]
-		},
 		lshoulder: {
 			x: 0.13,
 			y: 0.91 - 1,
@@ -323,9 +307,6 @@ const marionetteTemplate: AssemblyParams = {
 		["s2", "s3", 0.01],
 		["s3", "s1", 0.01],
 		["s3", "s4", 0.01],
-		["s4", "s5", 0.01],
-		["s5", "s6", 0.01],
-		["s6", "s4", 0.01],
 		["s1", "lshoulder", 0.01],
 		["s2", "lshoulder", 0.01],
 		["s3", "lshoulder", 0.01],
@@ -337,13 +318,10 @@ const marionetteTemplate: AssemblyParams = {
 		["rshoulder", "relbow", 0.01],
 		["relbow", "rwrist", 0.01],
 		["s4", "lhip", 0.01],
-		["s5", "lhip", 0.01],
-		["s6", "lhip", 0.01],
 		["lhip", "lknee", 0.01],
 		["lknee", "lankle", 0.01],
 		["s4", "rhip", 0.01],
-		["s5", "rhip", 0.01],
-		["s6", "rhip", 0.01],
+		["lhip", "rhip", 0.01],
 		["rhip", "rknee", 0.01],
 		["rknee", "rankle", 0.01]
 	]
