@@ -469,7 +469,7 @@ const run = (currentTime: number) => {
 		minx = minx > a.target.x ? a.target.x : minx;
 		maxx = maxx < a.target.x ? a.target.x : maxx;
 	}
-	Renderer.drawScene(assemblies, new Vec3((minx+maxx)/2, -0.5, -3-(maxx-minx)));
+	Renderer.drawScene(assemblies, new Vec3((minx+maxx)/-2, -0.5, -3-(maxx-minx)));
 }
 
 run(0);
