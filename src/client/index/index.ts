@@ -111,9 +111,9 @@ function update(motion: any) {
 function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
 	let mat = new Mat4();
 	mat.trans(pos.x, pos.y, pos.z);
-	mat.rotatex(rot.z);
 	mat.rotatey(-rot.x);
 	mat.rotatez(rot.y);
+	mat.rotatex(rot.z);
 	for (let n in vectors) {
 		let v = <Vec3>vectors[n];
 		let p = assembly.nodes[mapping[n]].pos
