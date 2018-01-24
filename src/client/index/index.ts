@@ -5,7 +5,6 @@ import { Renderer, AssemblyList } from 'Renderer';
 import { PhoneData } from 'thing';
 
 interface Marionette {
-	element: HTMLElement;
 	phoneData: PhoneData;
 	assembly: Assembly;
 	origin: Vec3;
@@ -65,17 +64,10 @@ function addMarionette(msg: PhoneAddedMessage) {
 			mapping[ns[i].name] = i;
 	}
 	numMarionettes++;
-	marionette.element.id = id;
-	marionette.element.className = 'thing'
 	//document.body.appendChild(puppet.element);
 	marionettes[id] = marionette;
 	assemblies[id] = marionette.assembly;
 	controllers[id] = mapping;
-
-	let i = 0;
-	for (let j in marionettes) {
-		marionettes[j].element.style.left = left(document.body.offsetWidth, numMarionettes, i++) + 'px';
-	}
 }
 function removeMarionette(id: string) {
 	console.log(`phone removed: ${id}`)
@@ -84,10 +76,6 @@ function removeMarionette(id: string) {
 	delete assemblies[id];
 	delete controllers[id];
 	numMarionettes--;
-	let i = 0;
-	for (let j in marionettes) {
-		marionettes[j].element.style.left = left(document.body.offsetWidth, numMarionettes, i++) + 'px';
-	}
 }
 function update(motion: any) {
 	if (!(motion.id in marionettes)) {
@@ -96,7 +84,6 @@ function update(motion: any) {
 
 	let marionette = marionettes[motion.id];
 	let thing = marionette.phoneData;
-	let element = marionette.element;
 	let origin = marionette.origin;
 
 	thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
@@ -114,8 +101,6 @@ function update(motion: any) {
 	var r = thing.rot;
 	positionController(a, c, controllerVectors, p1, r);
 
-	var s = 'rotateX(' + (r.z) + 'deg) rotateY(' + -r.y + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
-	element.style.transform = s;
 }
 function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
 	let mat = new Mat4();
