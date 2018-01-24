@@ -110,7 +110,7 @@ function update(motion: any) {
 }
 function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
 	let mat = new Mat4();
-	mat.trans(-pos.x, pos.y, pos.z);
+	mat.trans(pos.x, pos.y, pos.z);
 	mat.rotatex(rot.z);
 	mat.rotatey(-rot.x);
 	mat.rotatez(rot.y);
@@ -119,7 +119,7 @@ function positionController(assembly: Assembly, mapping: ControllerMapping, vect
 		let p = assembly.nodes[mapping[n]].pos
 		p.transformMat4(v, mat);
 	}
-	assembly.nodes[mapping['ccenter']].pos.set(-pos.x, pos.y, pos.z);
+	assembly.nodes[mapping['ccenter']].pos.set(pos.x, pos.y, pos.z);
 }
 
 let socket = io();
