@@ -8,7 +8,8 @@ interface Marionette {
 	phoneData: PhoneData;
 	assembly: Assembly;
 	origin: Vec3;
-	position: Vec3;
+	target: Vec3;
+	lifeTime: number;
 }
 interface MarionetteList {
 	[id: string]: Marionette;
@@ -40,14 +41,15 @@ function addMarionette(msg: PhoneAddedMessage) {
 	let slot = msg.slot;
 	let thing = new PhoneData();
 
-	let p = Math.floor(1+slot/2) * (slot%2)===0 ? -1 : 1; 
-	let origin = new Vec3(p, 0, 0);
+	let p = Math.ceil(slot/2) * ( (slot%2)===0 ? 2 : -2 ); 
+	let origin = new Vec3(p, 4, 0);
+	let target = new Vec3(p, 0, 0);
 	let marionette: Marionette = {
-		element: document.createElement('div'),
 		phoneData: new PhoneData,
 		assembly: new Assembly(marionetteTemplate, origin),
 		origin: origin,
-		position: origin
+		target: target,
+		lifeTime: 0
 	}
 	let mapping: ControllerMapping = {
 		ccenter:-1,
@@ -85,6 +87,12 @@ function update(motion: any) {
 	let marionette = marionettes[motion.id];
 	let thing = marionette.phoneData;
 	let origin = marionette.origin;
+	let target = marionette.target;
+	let phase = marionette.lifeTime/3;
+	if (phase >1) 
+	phase = 1;
+	let p = EasingFunctions.easeInOutCubic(phase)
+
 
 	thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
 	thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
@@ -92,11 +100,11 @@ function update(motion: any) {
 
 	let a = assemblies[motion.id];
 	let c = controllers[motion.id];
-	var p = thing.pos;
+	var pos = thing.pos;
 	var p1 = new Vec3(
-		origin.x + controllerCenter.x + p.x/100,
-		origin.y + controllerCenter.y + p.z/100,
-		origin.z + controllerCenter.z + p.y/100
+		origin.x * (1-p) + target.x * p + controllerCenter.x + pos.x/100,
+		origin.y * (1-p) + target.y * p + controllerCenter.y + pos.z/100,
+		origin.z * (1-p) + target.z * p + controllerCenter.z + pos.y/100
 	);
 	var r = thing.rot;
 	positionController(a, c, controllerVectors, p1, r);
@@ -317,6 +325,34 @@ const marionetteTemplate: AssemblyParams = {
 function interpolate(v1: number, v2: number, p: number) {
 	return (v2 - v1) * p + v1;
 }
+let EasingFunctions = {
+	// no easing, no acceleration
+	linear: function (t:number) { return t },
+	// accelerating from zero velocity
+	easeInQuad: function (t:number) { return t*t },
+	// decelerating to zero velocity
+	easeOutQuad: function (t:number) { return t*(2-t) },
+	// acceleration until halfway, then deceleration
+	easeInOutQuad: function (t:number) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+	// accelerating from zero velocity 
+	easeInCubic: function (t:number) { return t*t*t },
+	// decelerating to zero velocity 
+	easeOutCubic: function (t:number) { return (--t)*t*t+1 },
+	// acceleration until halfway, then deceleration 
+	easeInOutCubic: function (t:number) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+	// accelerating from zero velocity 
+	easeInQuart: function (t:number) { return t*t*t*t },
+	// decelerating to zero velocity 
+	easeOutQuart: function (t:number) { return 1-(--t)*t*t*t },
+	// acceleration until halfway, then deceleration
+	easeInOutQuart: function (t:number) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+	// accelerating from zero velocity
+	easeInQuint: function (t:number) { return t*t*t*t*t },
+	// decelerating to zero velocity
+	easeOutQuint: function (t:number) { return 1+(--t)*t*t*t*t },
+	// acceleration until halfway, then deceleration 
+	easeInOutQuint: function (t:number) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
+  }
 function createString(struct: AssemblyParams, sections: number, name: string, attachTo: string, x: number, y: number, z: number) {
 	let destNode = struct.nodes[attachTo];
 	for (let i = 0; i < sections; i++) {
@@ -340,7 +376,7 @@ function createRope(struct: AssemblyParams, sections: number, name: string, from
 	let fromPos = new Vec3(fromNode.x, fromNode.y, fromNode.z);
 	let toPos = new Vec3(toNode.x, toNode.y, toNode.z);
 	for (let i = 0; i < sections; i++) {
-		let p = i / sections;
+		let p = (i+1) / (sections+2);
 		struct.nodes[name + i] = {
 			x: interpolate(fromPos.x, toPos.x, p),
 			y: interpolate(fromPos.y, toPos.y, p),
@@ -401,6 +437,10 @@ const run = (currentTime: number) => {
 	requestAnimationFrame(run);
 
 	let dt = (currentTime - lastTime) / 1000;
+	for (let i in marionettes) {
+		let a = marionettes[i];
+		a.lifeTime += dt;
+	}
 	const runs = 20;
 	if (firstTime) {
 		firstTime = false;
@@ -428,10 +468,10 @@ const run = (currentTime: number) => {
 	let minx = Number.POSITIVE_INFINITY, maxx = Number.NEGATIVE_INFINITY;
 	for (let i in marionettes) {
 		let a = marionettes[i];
-		minx = minx > a.position.x ? a.position.x : minx;
-		maxx = maxx < a.position.x ? a.position.x : maxx;
+		minx = minx > a.target.x ? a.target.x : minx;
+		maxx = maxx < a.target.x ? a.target.x : maxx;
 	}
-	Renderer.drawScene(assemblies, new Vec3((minx+maxx)/2, -1, -5-(maxx-minx)));
+	Renderer.drawScene(assemblies, new Vec3((minx+maxx)/2, -0.5, -3-(maxx-minx)));
 }
 
 run(0);
