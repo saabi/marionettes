@@ -66,14 +66,12 @@ function addMarionette(msg: PhoneAddedMessage) {
 			mapping[ns[i].name] = i;
 	}
 	numMarionettes++;
-	//document.body.appendChild(puppet.element);
 	marionettes[id] = marionette;
 	assemblies[id] = marionette.assembly;
 	controllers[id] = mapping;
 }
 function removeMarionette(id: string) {
 	console.log(`phone removed: ${id}`)
-	//document.getElementById(id).remove();
 	delete marionettes[id];
 	delete assemblies[id];
 	delete controllers[id];
