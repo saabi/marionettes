@@ -61,6 +61,8 @@ export namespace Renderer {
     }
     // draw
     export function drawNode(node: Node, shader: Shader) {
+        if (node.radius === 0 )
+            return;
         shader.vec3('modelColor', node.rgb.x, node.rgb.y, node.rgb.z)
             .mat4('model', new Mat4()
                 .trans(node.pos.x, node.pos.y, node.pos.z)
@@ -69,7 +71,7 @@ export namespace Renderer {
             .draw(sphereGeom);
     }
     export function drawConstraint(constraint: Constraint, shader: Shader) {
-        if (!constraint.size) return;
+        if (!constraint.size || constraint.size === 0) return;
         const dx = constraint.n1.pos.x - constraint.n0.pos.x;
         const dy = constraint.n1.pos.y - constraint.n0.pos.y;
         const dz = constraint.n1.pos.z - constraint.n0.pos.z;
