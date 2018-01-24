@@ -70,12 +70,14 @@ export class Constraint {
 	n1: Node;
 	size: number;
 	dist: number;
+	tension: number;
 
-	constructor(n0: Node, n1: Node, size: number) {
+	constructor(n0: Node, n1: Node, size: number, tension: number) {
 		this.n0 = n0;
 		this.n1 = n1;
 		this.size = size || 0;
 		this.dist = n0.pos.distance(n1.pos);
+		this.tension = tension;
 	}
 	// solve constraint
 	solve() {
@@ -85,7 +87,7 @@ export class Constraint {
 		let dy = n0.y - n1.y;
 		let dz = n0.z - n1.z;
 		const currentDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-		const delta = 0.5 * (currentDist - this.dist) / currentDist;
+		const delta = this.tension * (currentDist - this.dist) / currentDist;
 		dx *= delta;
 		dy *= delta;
 		dz *= delta;
@@ -105,21 +107,22 @@ export class Assembly {
     readonly nodes: Node[] = [];
     readonly constraints: Constraint[] = [];
 
-    constructor(struct: AssemblyParams, offset: Vec3) {
-        // load nodes
-        for (let n in struct.nodes) {
+	constructor(struct: AssemblyParams, offset: Vec3) {
+		// load nodes
+		for (let n in struct.nodes) {
 			const node = new Node(n, struct.nodes[n]);
 			node.pos.add(offset);
 			node.old.add(offset);
-            struct.nodes[n].id = node;
-            this.nodes.push(node);
-        }
-        // define constraints
-        for (let i = 0; i < struct.constraints.length; i++) {
-            this.constraints.push(new Constraint(
-                struct.nodes[struct.constraints[i][0]].id,
-                struct.nodes[struct.constraints[i][1]].id,
-                struct.constraints[i][2]
+			struct.nodes[n].id = node;
+			this.nodes.push(node);
+		}
+		// define constraints
+		for (let i = 0; i < struct.constraints.length; i++) {
+			this.constraints.push(new Constraint(
+				struct.nodes[struct.constraints[i][0]].id,
+				struct.nodes[struct.constraints[i][1]].id,
+				struct.constraints[i][2],
+				struct.constraints[i][3]
             ));
         }
     }

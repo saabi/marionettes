@@ -161,8 +161,8 @@ const marionetteTemplate: AssemblyParams = {
 			x: 0,
 			y: 1 - 1,
 			z: 0,
-			w: 0.1,
-			mass: 15.0,
+			w: 0.2,
+			mass: 105.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s1: {
@@ -170,7 +170,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.92 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s2: {
@@ -178,7 +178,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.88 - 1,
 			z: -0.05,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		s3: {
@@ -186,7 +186,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.75 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		s4: {
@@ -194,7 +194,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.64 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [1.5, 1.2, 0.8]
 		},
 		lshoulder: {
@@ -202,7 +202,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.91 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lelbow: {
@@ -210,7 +210,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.7 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lwrist: {
@@ -218,7 +218,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.52 - 1 + 0.48,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rshoulder: {
@@ -226,7 +226,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.91 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		relbow: {
@@ -234,7 +234,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.7 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rwrist: {
@@ -242,7 +242,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.52 - 1 + 0.48,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lhip: {
@@ -250,7 +250,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.58 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lknee: {
@@ -258,7 +258,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.29 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		lankle: {
@@ -266,7 +266,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.1 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rhip: {
@@ -274,7 +274,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.58 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rknee: {
@@ -282,7 +282,7 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.29 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		},
 		rankle: {
@@ -290,33 +290,33 @@ const marionetteTemplate: AssemblyParams = {
 			y: 0.1 - 1,
 			z: 0,
 			w: 0.03,
-			mass: 15.0,
+			mass: 105.0,
 			color: [0.8, 1.2, 1.5]
 		}
 	},
 	constraints: [
-		["head", "s1", 0.01],
-		["s1", "s2", 0.01],
-		["s2", "s3", 0.01],
-		["s3", "s1", 0.01],
-		["s3", "s4", 0.01],
-		["s1", "lshoulder", 0.01],
-		["s2", "lshoulder", 0.01],
-		["s3", "lshoulder", 0.01],
-		["lshoulder", "lelbow", 0.01],
-		["lelbow", "lwrist", 0.01],
-		["s1", "rshoulder", 0.01],
-		["s2", "rshoulder", 0.01],
-		["s3", "rshoulder", 0.01],
-		["rshoulder", "relbow", 0.01],
-		["relbow", "rwrist", 0.01],
-		["s4", "lhip", 0.01],
-		["lhip", "lknee", 0.01],
-		["lknee", "lankle", 0.01],
-		["s4", "rhip", 0.01],
-		["lhip", "rhip", 0.01],
-		["rhip", "rknee", 0.01],
-		["rknee", "rankle", 0.01]
+		["head", "s1", 0.01, 0.5],
+		["s1", "s2", 0.01, 0.5],
+		["s2", "s3", 0.01, 0.5],
+		["s3", "s1", 0.01, 0.5],
+		["s3", "s4", 0.01, 0.5],
+		["s1", "lshoulder", 0.01, 0.5],
+		["s2", "lshoulder", 0.01, 0.5],
+		["s3", "lshoulder", 0.01, 0.5],
+		["lshoulder", "lelbow", 0.01, 0.5],
+		["lelbow", "lwrist", 0.01, 0.5],
+		["s1", "rshoulder", 0.01, 0.5],
+		["s2", "rshoulder", 0.01, 0.5],
+		["s3", "rshoulder", 0.01, 0.5],
+		["rshoulder", "relbow", 0.01, 0.5],
+		["relbow", "rwrist", 0.01, 0.5],
+		["s4", "lhip", 0.01, 0.5],
+		["lhip", "lknee", 0.01, 0.5],
+		["lknee", "lankle", 0.01, 0.5],
+		["s4", "rhip", 0.01, 0.5],
+		["lhip", "rhip", 0.01, 0.5],
+		["rhip", "rknee", 0.01, 0.5],
+		["rknee", "rankle", 0.01, 0.5]
 	]
 };
 
@@ -379,15 +379,21 @@ function createRope(struct: AssemblyParams, sections: number, name: string, from
 			x: interpolate(fromPos.x, toPos.x, p),
 			y: interpolate(fromPos.y, toPos.y, p),
 			z: interpolate(fromPos.z, toPos.z, p),
-			w: 0.001,
+			w: 0.00,
 			mass: 1,
 			color: [0.8, 1.2, 1.5],
 		};
-		struct.constraints.push([name + i, name + (i + 1), 0.005]);
+		struct.constraints.push([name + i, name + (i + 1), 0.001, 0.5]);
+		if (i + 2 < sections)
+			struct.constraints.push([name + i, name + (i + 2), 0.00, 0.5]);
+		if (i + 3 < sections)
+			struct.constraints.push([name + i, name + (i + 3), 0.00, 0.5]);
+		if (i + 4 < sections)
+			struct.constraints.push([name + i, name + (i + 4), 0.00, 0.5]);
 	}
 	//struct.nodes[name + '0'].free = false;
 	struct.constraints[struct.constraints.length - 1][1] = to;
-	struct.constraints.push([from, name+'0', 0.005]);
+	struct.constraints.push([from, name+'0', 0.001, 0.5]);
 }
 function createController(template: AssemblyParams, center: Vec3, vectors: any) {
 	template.nodes.ccenter = {
@@ -406,18 +412,18 @@ function createController(template: AssemblyParams, center: Vec3, vectors: any) 
 			y: v.y + center.y,
 			z: v.z + center.z,
 			w: 0.1,
-			mass: 1.0,
+			mass: 150.0,
 			color: [1.5, 1.2, 0.8],
 			free: false
 		}
 	}
 	template.constraints.push(
-		["ccenter", "cleft", 0.01],
-		["ccenter", "cright", 0.01],
-		["ccenter", "cleft1", 0.01],
-		["ccenter", "cright1", 0.01],
-		["ccenter", "cback", 0.01],
-		["ccenter", "cfront", 0.01]
+		["ccenter", "cleft", 0.02, 1],
+		["ccenter", "cright", 0.02, 1],
+		["ccenter", "cleft1", 0.02, 1],
+		["ccenter", "cright1", 0.02, 1],
+		["ccenter", "cback", 0.02, 1],
+		["ccenter", "cfront", 0.02, 1]
 	);
 }
 
@@ -427,6 +433,7 @@ createRope(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft');
 createRope(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright');
 createRope(marionetteTemplate, 30, 'ropelknee', 'lknee', 'cleft1');
 createRope(marionetteTemplate, 30, 'roperknee', 'rknee', 'cright1');
+createRope(marionetteTemplate, 30, 'ropes4', 's4', 'cback');
 
 // animation loop
 let lastTime = 0;
