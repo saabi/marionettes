@@ -110,6 +110,7 @@ export class Assembly {
         for (let n in struct.nodes) {
 			const node = new Node(n, struct.nodes[n]);
 			node.pos.add(offset);
+			node.old.add(offset);
             struct.nodes[n].id = node;
             this.nodes.push(node);
         }
