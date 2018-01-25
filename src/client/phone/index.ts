@@ -83,13 +83,13 @@ class Device {
         }
         window.addEventListener("deviceorientation", handleOrientation, true);
         window.addEventListener("devicemotion", handleMotion, true);
-        window.addEventListener("touchend", handleTouch, true);
+        //window.addEventListener("touchend", handleTouch, true);
     }
 }
 
 const controllerVectors = {
-	cleft1: new Vec3(-1,0,0),
-	cright1: new Vec3(1,0,0),
+	clefta: new Vec3(-1,0,0),
+	crighta: new Vec3(1,0,0),
 	cleft: new Vec3(-1,0,0.5),
 	cright: new Vec3(1,0,0.5),
 	cback: new Vec3(0,0,-1),
@@ -110,25 +110,36 @@ class Controller {
             let el = <HTMLDivElement>children[i];
             this.children.push(el);
             let v = <Vec3>(<any>controllerVectors)[el.id] || new Vec3();
-            el.style.left = v.x * 25 + 48 + 'vw';
+            el.style.left = -v.x * 25 + 48 + 'vw';
             el.style.top = -v.z * 25 + 48 + 'vw';
-            el.ontouchmove = (ev:TouchEvent) => {
-                let t = ev.touches[0];
+        }
+        element.ontouchmove = (ev:TouchEvent) => {
+            for (let i in ev.touches) {
+                let t = ev.touches[i];
+                let el1 = <HTMLDivElement>t.target;
+                if (el1 === element)
+                    continue;
                 let x = t.pageX - element.offsetLeft;
                 let y = t.pageY - element.offsetTop;
-                el.style.left = 100*x/element.offsetWidth + 'vw';
-                el.style.top = 100*y/element.offsetHeight + 'vw';
-                let v1
-                let v = <Vec3>(<any>controllerVectors)[ev.srcElement.id] || new Vec3()
-                stringPulls[ev.srcElement.id] = new Vec3()
-            }
-            el.ontouchend = (ev:TouchEvent) => {
-                let v = <Vec3>(<any>controllerVectors)[ev.srcElement.id] || new Vec3();
-                el.style.left = v.x * 25 + 48 + 'vw';
-                el.style.top = -v.z * 25 + 48 + 'vw';                    
+                el1.style.left = 100 * (x -element.offsetWidth*0.03) / element.offsetWidth + 'vw';
+                el1.style.top = 100 * (y -element.offsetWidth*0.03) / element.offsetHeight + 'vw';
+                let v1 = <Vec3>(<any>controllerVectors)[el1.id] || new Vec3()
+                stringPulls[el1.id] = new Vec3(-4 * x / element.offsetWidth + 2, 0, -4 * y / element.offsetHeight + 2).sub(v1);
             }
         }
-    }
+        element.ontouchend = (ev:TouchEvent) => {
+            for (let i in ev.changedTouches) {
+                let t = ev.touches[i];
+                let el2 = <HTMLDivElement>t.target;
+                if (el2 === element)
+                    continue;
+                let v = <Vec3>(<any>controllerVectors)[el2.id] || new Vec3();
+                el2.style.left = -v.x * 25 + 48 + 'vw';
+                el2.style.top = -v.z * 25 + 48 + 'vw';
+                delete stringPulls[el2.id];
+            }
+        }
+}
 }
 
 var data = new MotionData();
@@ -152,7 +163,8 @@ function update() {
     let rot = {x: phone.rot.x - originOrientation.x, y: phone.rot.y - originOrientation.y, z: phone.rot.z - originOrientation.z }
     var message = {
         acc: phone.acc,
-        rot: rot
+        rot: rot,
+        pulls: stringPulls
     }
     socket.emit('message', message);
 
