@@ -110,8 +110,8 @@ class Controller {
             let el = <HTMLDivElement>children[i];
             this.children.push(el);
             let v = <Vec3>(<any>controllerVectors)[el.id] || new Vec3();
-            el.style.left = -v.x * 25 + 48 + 'vw';
-            el.style.top = -v.z * 25 + 48 + 'vw';
+            el.style.left = -v.x * 25 + 44 + 'vw';
+            el.style.top = -v.z * 25 + 44 + 'vw';
         }
         element.ontouchmove = (ev:TouchEvent) => {
             for (let i = 0; i < ev.touches.length; i++) {
@@ -134,8 +134,8 @@ class Controller {
                 if (el2 === element)
                     continue;
                 let v = <Vec3>(<any>controllerVectors)[el2.id] || new Vec3();
-                el2.style.left = -v.x * 25 + 48 + 'vw';
-                el2.style.top = -v.z * 25 + 48 + 'vw';
+                el2.style.left = -v.x * 25 + 44 + 'vw';
+                el2.style.top = -v.z * 25 + 44 + 'vw';
                 delete stringPulls[el2.id];
             }
         }
