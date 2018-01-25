@@ -37,18 +37,11 @@ class Device {
             var beta = event.beta;
             var gamma = event.gamma;
             this.absolute = absolute;
-            if (!absolute) {
-                this.rot.x = alpha;
-                this.rot.y = beta;
-                this.rot.z = gamma;
-            }
-            else {
-                this.rot.x += alpha;
-                this.rot.y += beta;
-                this.rot.z += gamma;
-            }
+            this.rot.x = alpha;
+            this.rot.y = beta;
+            this.rot.z = gamma;
             target.setRotation(this.rot.x, this.rot.y, this.rot.z);
-            rotDisplay.innerText = absolute?'abs' : 'rel' + (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
+            rotDisplay.innerText = absolute?'abs-' : 'rel-' + (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
         }
 
         let handleMotion = (event: DeviceMotionEvent) => {
