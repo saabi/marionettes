@@ -1,5 +1,6 @@
 import { MotionData } from 'MotionData';
 import * as io from 'socket.io-client';
+import {Vec3} from 'VecMath';
 
 interface Vec {
     x: number;
@@ -36,10 +37,17 @@ class Device {
             var beta = event.beta;
             var gamma = event.gamma;
             this.absolute = absolute;
-            this.rot.x = alpha;
-            this.rot.y = beta;
-            this.rot.z = gamma;
-            target.setRotation(alpha, beta, gamma);
+            if (absolute) {
+                this.rot.x = alpha;
+                this.rot.y = beta;
+                this.rot.z = gamma;
+            }
+            else {
+                this.rot.x += alpha;
+                this.rot.y += beta;
+                this.rot.z += gamma;
+            }
+            target.setRotation(this.rot.x, this.rot.y, this.rot.z);
             rotDisplay.innerText = (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
         }
 
@@ -79,10 +87,54 @@ class Device {
     }
 }
 
+const controllerVectors = {
+	cleft1: new Vec3(-1,0,0),
+	cright1: new Vec3(1,0,0),
+	cleft: new Vec3(-1,0,0.5),
+	cright: new Vec3(1,0,0.5),
+	cback: new Vec3(0,0,-1),
+	cfront: new Vec3(0,0,1)
+}
+
+interface StringPulls {
+    [name:string]: Vec3;
+}
+const stringPulls: StringPulls = {};
+
+class Controller {
+    children: HTMLDivElement[] = [];
+
+    constructor (element: HTMLElement) {
+        let children = element.getElementsByClassName('handle');
+        for (let i = 0; i < children.length; i++) {
+            let el = <HTMLDivElement>children[i];
+            this.children.push(el);
+            let v = <Vec3>(<any>controllerVectors)[el.id] || new Vec3();
+            el.style.left = v.x * 25 + 48 + 'vw';
+            el.style.top = -v.z * 25 + 48 + 'vw';
+            el.ontouchmove = (ev:TouchEvent) => {
+                let t = ev.touches[0];
+                let x = t.pageX - element.offsetLeft;
+                let y = t.pageY - element.offsetTop;
+                el.style.left = 100*x/element.offsetWidth + 'vw';
+                el.style.top = 100*y/element.offsetHeight + 'vw';
+                let v1
+                let v = <Vec3>(<any>controllerVectors)[ev.srcElement.id] || new Vec3()
+                stringPulls[ev.srcElement.id] = new Vec3()
+            }
+            el.ontouchend = (ev:TouchEvent) => {
+                let v = <Vec3>(<any>controllerVectors)[ev.srcElement.id] || new Vec3();
+                el.style.left = v.x * 25 + 48 + 'vw';
+                el.style.top = -v.z * 25 + 48 + 'vw';                    
+            }
+        }
+    }
+}
+
 var data = new MotionData();
 var phone = new Device(data);
 var originOrientation = {x:0,y:0,z:0};
-let element = document.getElementById('thing');
+//let element = document.getElementById('thing');
 
 let resetButton = document.getElementById('resetButton');
 resetButton.onclick = () => {
@@ -107,8 +159,9 @@ function update() {
     var p = data.pos;
     var r = data.rot;
 
-    var s = 'rotateX(' + r.y + 'deg) rotateY(' + -r.z + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
-    element.style.transform = s;
+    //var s = 'rotateX(' + r.y + 'deg) rotateY(' + -r.z + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
+    //element.style.transform = s;
 }
 
+new Controller(document.getElementById('controller'));
 setInterval(update, 16);

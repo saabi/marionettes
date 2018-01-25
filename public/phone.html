@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Virtual Marionette Controller</title>
   <style>
@@ -13,6 +13,7 @@
         width: 100%;
         height: 100%;
         margin: 0;
+        overflow: hidden;
     }
     #thing {
         position:absolute;
@@ -24,17 +25,65 @@
         text-align:center;
         transform-origin: 25px 40px;
     }
+    #text, #stage, #controller {
+        display: block;
+        width:100vw;
+    };
+    #text {
+        height: 5vh;
+    }
+    #stage {
+        height: 40vw;
+        background:red;
+    }
+    #controller {
+        height: 60vw;
+        background:gray;
+        position:relative;
+        width: 100vw;
+        height: 100vw;
+    }
+    .handle {
+        position: absolute;
+        width: 4vmax;
+        height: 4vmax;
+        border-radius: 4vmax;
+        background: silver;
+    }
+    .handle:hover {
+        background: gray;
+    }
+    #ccenter {
+
+    }
   </style>
 </head>
 <body>
-    <div>
-        Point the top edge of the phone towards the screen and press the reset button to calibrate the orientation.
+<!--
+    <input id='text' type='text' placeholder="Type something here..."/>
+    <div id='stage' width='100vw' height='40vw'>
+        <div class='handle' id='cpos' />
+    </div>
+-->
+    <div id='controller'>
+        <div class='handle' id='ccenter'></div>
+        <div class='handle' id='cright'></div>
+        <div class='handle' id='cleft'></div>
+        <div class='handle' id='cright1'></div>
+        <div class='handle' id='cleft1'></div>
+        <div class='handle' id='cfront'></div>
+        <div class='handle' id='cback'></div>
+    </div>
+    <div id='calibrator'>
+        <p>Point the top edge of the phone towards the screen and press the button to calibrate the orientation.</p>
         <button id='resetButton'>Calibrate</button>
     </div>
     <div id='acc'>Hello!</div>
     <div id='avgacc'>Hello!</div>
     <div id='rot'>Hello!</div>
+    <!--
     <div id='thing'>Hello!</div>
+    -->
 
     <script src="js/components/requirejs/require.js"></script>
     <script src="js/phone-built.js"></script>
