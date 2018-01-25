@@ -10,6 +10,7 @@ interface Marionette {
 	origin: Vec3;
 	target: Vec3;
 	lifeTime: number;
+	ropes: string[];
 }
 interface MarionetteList {
 	[id: string]: Marionette;
@@ -49,14 +50,15 @@ function addMarionette(msg: PhoneAddedMessage) {
 		assembly: new Assembly(marionetteTemplate, origin),
 		origin: origin,
 		target: target,
-		lifeTime: 0
+		lifeTime: 0,
+		ropes: ['ccenter', 'cleft', 'clefta', 'cright', 'crighta', 'cback']
 	}
 	let mapping: ControllerMapping = {
 		ccenter:-1,
 		cright:-1,
 		cleft:-1,
-		cright1:-1,
-		cleft1:-1,
+		crighta:-1,
+		clefta:-1,
 		cfront:-1,
 		cback:-1
 	}
@@ -91,7 +93,6 @@ function update(motion: any) {
 	phase = 1;
 	let p = EasingFunctions.easeInOutCubic(phase)
 
-
 	thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
 	thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
 	thing.update();
@@ -106,7 +107,40 @@ function update(motion: any) {
 	);
 	var r = thing.rot;
 	positionController(a, c, controllerVectors, p1, r);
-
+	for (let i in marionette.ropes) {
+		let n = marionette.ropes[i];
+		freeRope(assemblies[motion.id], n);
+		if (motion.pulls !== undefined && (n in motion.pulls)) {
+			let fv = motion.pulls[n];
+			grabRope(assemblies[motion.id], n, new Vec3(fv.x, fv.y, fv.z));
+		}
+	}
+	d.innerText = JSON.stringify(motion.pulls)
+}
+function freeRope(assembly:Assembly, rope:string) {
+	for(let i = 0; i<13; i++) {
+		let n1 = assembly.nodeIndex['rope'+rope+i.toString()];
+		n1.free = true;
+	}
+}
+function grabRope(assembly:Assembly, rope:string, v:Vec3) {
+	let l = 0;
+	let d = v.length();
+	//v.x = -v.x;
+	let a = 30 * Math.PI/180;
+	v.mul(Math.cos(a))
+	v.y = -Math.sin(a)*d;
+	let n = assembly.nodeIndex[rope];
+	for(let i = 0; i<30; i++) {
+		let n1 = assembly.nodeIndex['rope'+rope+i.toString()];
+		n1.free = true;
+		if (l<d) {
+			l += n.pos.distance(n1.pos);
+			n = n1;
+		}
+	}
+	n.free = false;
+	n.pos = new Vec3().copy(assembly.nodeIndex[rope].pos).add(v);
 }
 function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
 	let mat = new Mat4();
@@ -148,8 +182,8 @@ const lightStruct: AssemblyParams = {
 
 const controllerCenter = new Vec3(0, 1.5, 0);
 const controllerVectors = {
-	cleft1: new Vec3(-1,0,0),
-	cright1: new Vec3(1,0,0),
+	clefta: new Vec3(-1,0,0),
+	crighta: new Vec3(1,0,0),
 	cleft: new Vec3(-1,0,0.5),
 	cright: new Vec3(1,0,0.5),
 	cback: new Vec3(0,0,-1),
@@ -420,20 +454,20 @@ function createController(template: AssemblyParams, center: Vec3, vectors: any) 
 	template.constraints.push(
 		["ccenter", "cleft", 0.02, 1],
 		["ccenter", "cright", 0.02, 1],
-		["ccenter", "cleft1", 0.02, 1],
-		["ccenter", "cright1", 0.02, 1],
+		["ccenter", "clefta", 0.02, 1],
+		["ccenter", "crighta", 0.02, 1],
 		["ccenter", "cback", 0.02, 1],
 		["ccenter", "cfront", 0.02, 1]
 	);
 }
 
 createController(marionetteTemplate, controllerCenter, controllerVectors);
-createRope(marionetteTemplate, 30, 'ropehead', 'head', 'ccenter');
-createRope(marionetteTemplate, 30, 'ropelwrist', 'lwrist', 'cleft');
-createRope(marionetteTemplate, 30, 'roperwrist', 'rwrist', 'cright');
-createRope(marionetteTemplate, 30, 'ropelknee', 'lknee', 'cleft1');
-createRope(marionetteTemplate, 30, 'roperknee', 'rknee', 'cright1');
-createRope(marionetteTemplate, 30, 'ropes4', 's4', 'cback');
+createRope(marionetteTemplate, 30, 'ropeccenter', 'ccenter', 'head');
+createRope(marionetteTemplate, 30, 'ropecleft', 'cleft', 'lwrist');
+createRope(marionetteTemplate, 30, 'ropecright', 'cright', 'rwrist');
+createRope(marionetteTemplate, 30, 'ropeclefta', 'clefta', 'lknee');
+createRope(marionetteTemplate, 30, 'ropecrighta', 'crighta', 'rknee');
+createRope(marionetteTemplate, 30, 'ropecback', 'cback', 's4');
 
 // animation loop
 let lastTime = 0;
@@ -480,3 +514,8 @@ const run = (currentTime: number) => {
 }
 
 run(0);
+
+let d = document.createElement('pre');
+d.style.position = 'absolute';
+d.style.color = 'white;'
+document.body.appendChild(d);

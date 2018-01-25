@@ -53,6 +53,12 @@ export class Vec3 {
 		return this;
 	}
 
+	length () {
+		const dx = this.x;
+		const dy = this.y;
+		const dz = this.z;
+		return Math.sqrt(dx * dx + dy * dy + dz * dz);		
+	}
 	distance(b: Vec3) {
 		const dx = b.x - this.x;
 		const dy = b.y - this.y;

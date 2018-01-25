@@ -105,7 +105,10 @@ export class Constraint {
 
 export class Assembly {
     readonly nodes: Node[] = [];
-    readonly constraints: Constraint[] = [];
+	readonly constraints: Constraint[] = [];
+	readonly nodeIndex: {
+		[name:string]: Node;
+	} = {}
 
 	constructor(struct: AssemblyParams, offset: Vec3) {
 		// load nodes
@@ -115,6 +118,7 @@ export class Assembly {
 			node.old.add(offset);
 			struct.nodes[n].id = node;
 			this.nodes.push(node);
+			this.nodeIndex[n] = node;
 		}
 		// define constraints
 		for (let i = 0; i < struct.constraints.length; i++) {
