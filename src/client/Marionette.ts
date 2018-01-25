@@ -358,7 +358,7 @@ export class Marionette {
         }    
     }
     freeRope(rope:string) {
-        for(let i = 0; i<13; i++) {
+        for(let i = 0; i<30; i++) {
             let n1 = this.assembly.nodeIndex['rope'+rope+i.toString()];
             n1.free = true;
         }
