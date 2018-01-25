@@ -290,11 +290,9 @@ let EasingFunctions = {
 	easeOutQuint: function (t:number) { return 1+(--t)*t*t*t*t },
 	// acceleration until halfway, then deceleration 
 	easeInOutQuint: function (t:number) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
-  }
+}
 
-
-
-  export class Marionette {
+export class Marionette {
 	phoneData: MotionData;
 	assembly: Assembly;
 	origin: Vec3;
