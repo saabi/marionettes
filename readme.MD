@@ -1,7 +1,7 @@
 # Marionette Simulator
 
 Using a mobile device with motion and rotation sensors you can control a virtual marionette running on a browser.
-[![Marionette Simulator](https://img.youtube.com/vi/XktABlg3Ytk/0.jpg)](https://www.youtube.com/watch?v=XktABlg3Ytk)
+![Marionette Simulator](https://i.imgur.com/iGInAkc.gif)
 
 ## Installation
 
