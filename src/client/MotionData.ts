@@ -1,6 +1,6 @@
 import { Vec3 } from './VecMath';
 
-export class PhoneData {
+export class MotionData {
     pos = new Vec3;
     vel = new Vec3;
     rot = new Vec3;

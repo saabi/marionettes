@@ -2,10 +2,10 @@ import * as io from 'socket.io-client';
 import { Vec3, Mat4 } from 'VecMath';
 import { AssemblyParams, Assembly } from 'VerletIntegration';
 import { Renderer, AssemblyList } from 'Renderer';
-import { PhoneData } from 'thing';
+import { MotionData } from 'MotionData';
 
 interface Marionette {
-	phoneData: PhoneData;
+	phoneData: MotionData;
 	assembly: Assembly;
 	origin: Vec3;
 	target: Vec3;
@@ -39,13 +39,13 @@ function addMarionette(msg: PhoneAddedMessage) {
 	console.log(`phone added: ${msg.id} - ${msg.slot}`);
 	let id = msg.id;
 	let slot = msg.slot;
-	let thing = new PhoneData();
+	let thing = new MotionData();
 
 	let p = Math.ceil(slot/2) * ( (slot%2)===0 ? 2 : -2 ); 
 	let origin = new Vec3(p, 4, 0);
 	let target = new Vec3(p, 0, 0);
 	let marionette: Marionette = {
-		phoneData: new PhoneData,
+		phoneData: new MotionData,
 		assembly: new Assembly(marionetteTemplate, origin),
 		origin: origin,
 		target: target,

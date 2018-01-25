@@ -1,4 +1,4 @@
-import { PhoneData } from 'thing';
+import { MotionData } from 'MotionData';
 import * as io from 'socket.io-client';
 
 interface Vec {
@@ -17,7 +17,7 @@ class Device {
     absolute: boolean;
     rounder: number;
 
-    constructor(target: PhoneData) {
+    constructor(target: MotionData) {
         var avgaccDisplay = document.getElementById('avgacc');
         var accDisplay = document.getElementById('acc');
         var rotDisplay = document.getElementById('rot');
@@ -79,7 +79,7 @@ class Device {
     }
 }
 
-var data = new PhoneData();
+var data = new MotionData();
 var phone = new Device(data);
 var originOrientation = {x:0,y:0,z:0};
 let element = document.getElementById('thing');
