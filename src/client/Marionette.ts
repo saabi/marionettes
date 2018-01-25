@@ -263,22 +263,45 @@ createRope(marionetteTemplate, 30, 'ropeclefta', 'clefta', 'lknee');
 createRope(marionetteTemplate, 30, 'ropecrighta', 'crighta', 'rknee');
 createRope(marionetteTemplate, 30, 'ropecback', 'cback', 's4');
 
-interface ControllerMappingList {
-	[id:string]: ControllerMapping;
-}
+let EasingFunctions = {
+	// no easing, no acceleration
+	linear: function (t:number) { return t },
+	// accelerating from zero velocity
+	easeInQuad: function (t:number) { return t*t },
+	// decelerating to zero velocity
+	easeOutQuad: function (t:number) { return t*(2-t) },
+	// acceleration until halfway, then deceleration
+	easeInOutQuad: function (t:number) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+	// accelerating from zero velocity 
+	easeInCubic: function (t:number) { return t*t*t },
+	// decelerating to zero velocity 
+	easeOutCubic: function (t:number) { return (--t)*t*t+1 },
+	// acceleration until halfway, then deceleration 
+	easeInOutCubic: function (t:number) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+	// accelerating from zero velocity 
+	easeInQuart: function (t:number) { return t*t*t*t },
+	// decelerating to zero velocity 
+	easeOutQuart: function (t:number) { return 1-(--t)*t*t*t },
+	// acceleration until halfway, then deceleration
+	easeInOutQuart: function (t:number) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+	// accelerating from zero velocity
+	easeInQuint: function (t:number) { return t*t*t*t*t },
+	// decelerating to zero velocity
+	easeOutQuint: function (t:number) { return 1+(--t)*t*t*t*t },
+	// acceleration until halfway, then deceleration 
+	easeInOutQuint: function (t:number) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
+  }
 
-interface ControllerMapping {
-	[name:string]: number;
-}
 
-export class Marionette {
+
+  export class Marionette {
 	phoneData: MotionData;
 	assembly: Assembly;
 	origin: Vec3;
 	target: Vec3;
 	lifeTime: number;
     ropes: string[];
-    controllerMapping: ControllerMapping;
+    controllerMapping: {[name:string]: number;};
 
     constructor( origin:Vec3, target:Vec3, ) {
         this.phoneData = new MotionData();
@@ -319,8 +342,6 @@ export class Marionette {
         thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
         thing.update();
     
-        let a = this.assembly;
-        let c = this.controllerMapping;
         var pos = thing.pos;
         var p1 = new Vec3(
             origin.x * (1-p) + target.x * p + controllerCenter.x + pos.x/100,
@@ -328,82 +349,53 @@ export class Marionette {
             origin.z * (1-p) + target.z * p + controllerCenter.z + pos.y/100
         );
         var r = thing.rot;
-        positionController(a, c, controllerVectors, p1, r);
+        this.positionController(controllerVectors, p1, r);
         for (let i in this.ropes) {
             let n = this.ropes[i];
-            freeRope(this.assembly, n);
+            this.freeRope(n);
             if (motion.pulls !== undefined && (n in motion.pulls)) {
                 let fv = motion.pulls[n];
-                grabRope(this.assembly, n, new Vec3(fv.x, fv.y, fv.z));
+                this.grabRope(n, new Vec3(fv.x, fv.y, fv.z));
             }
         }    
     }
+    freeRope(rope:string) {
+        for(let i = 0; i<13; i++) {
+            let n1 = this.assembly.nodeIndex['rope'+rope+i.toString()];
+            n1.free = true;
+        }
+    }
+    grabRope(rope:string, v:Vec3) {
+        let l = 0;
+        let d = v.length();
+        //v.x = -v.x;
+        let a = 30 * Math.PI/180;
+        v.mul(Math.cos(a))
+        v.y = -Math.sin(a)*d;
+        let n = this.assembly.nodeIndex[rope];
+        for(let i = 0; i<30; i++) {
+            let n1 = this.assembly.nodeIndex['rope'+rope+i.toString()];
+            n1.free = true;
+            if (l<d) {
+                l += n.pos.distance(n1.pos);
+                n = n1;
+            }
+        }
+        n.free = false;
+        n.pos = new Vec3().copy(this.assembly.nodeIndex[rope].pos).add(v);
+    }
+    positionController(vectors:any, pos: Vec3, rot: Vec3) {
+        let mapping = this.controllerMapping;
+        let mat = new Mat4();
+        mat.trans(pos.x, pos.y, pos.z);
+        mat.rotatey(-rot.x);
+        mat.rotatez(rot.y);
+        mat.rotatex(rot.z);
+        for (let n in vectors) {
+            let v = <Vec3>vectors[n];
+            let p = this.assembly.nodes[mapping[n]].pos
+            p.transformMat4(v, mat);
+        }
+        this.assembly.nodes[mapping['ccenter']].pos.set(pos.x, pos.y, pos.z);
+    }
 }
-function freeRope(assembly:Assembly, rope:string) {
-	for(let i = 0; i<13; i++) {
-		let n1 = assembly.nodeIndex['rope'+rope+i.toString()];
-		n1.free = true;
-	}
-}
-function grabRope(assembly:Assembly, rope:string, v:Vec3) {
-	let l = 0;
-	let d = v.length();
-	//v.x = -v.x;
-	let a = 30 * Math.PI/180;
-	v.mul(Math.cos(a))
-	v.y = -Math.sin(a)*d;
-	let n = assembly.nodeIndex[rope];
-	for(let i = 0; i<30; i++) {
-		let n1 = assembly.nodeIndex['rope'+rope+i.toString()];
-		n1.free = true;
-		if (l<d) {
-			l += n.pos.distance(n1.pos);
-			n = n1;
-		}
-	}
-	n.free = false;
-	n.pos = new Vec3().copy(assembly.nodeIndex[rope].pos).add(v);
-}
-function positionController(assembly: Assembly, mapping: ControllerMapping, vectors:any, pos: Vec3, rot: Vec3) {
-	let mat = new Mat4();
-	mat.trans(pos.x, pos.y, pos.z);
-	mat.rotatey(-rot.x);
-	mat.rotatez(rot.y);
-	mat.rotatex(rot.z);
-	for (let n in vectors) {
-		let v = <Vec3>vectors[n];
-		let p = assembly.nodes[mapping[n]].pos
-		p.transformMat4(v, mat);
-	}
-	assembly.nodes[mapping['ccenter']].pos.set(pos.x, pos.y, pos.z);
-}
-let EasingFunctions = {
-	// no easing, no acceleration
-	linear: function (t:number) { return t },
-	// accelerating from zero velocity
-	easeInQuad: function (t:number) { return t*t },
-	// decelerating to zero velocity
-	easeOutQuad: function (t:number) { return t*(2-t) },
-	// acceleration until halfway, then deceleration
-	easeInOutQuad: function (t:number) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
-	// accelerating from zero velocity 
-	easeInCubic: function (t:number) { return t*t*t },
-	// decelerating to zero velocity 
-	easeOutCubic: function (t:number) { return (--t)*t*t+1 },
-	// acceleration until halfway, then deceleration 
-	easeInOutCubic: function (t:number) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
-	// accelerating from zero velocity 
-	easeInQuart: function (t:number) { return t*t*t*t },
-	// decelerating to zero velocity 
-	easeOutQuart: function (t:number) { return 1-(--t)*t*t*t },
-	// acceleration until halfway, then deceleration
-	easeInOutQuart: function (t:number) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
-	// accelerating from zero velocity
-	easeInQuint: function (t:number) { return t*t*t*t*t },
-	// decelerating to zero velocity
-	easeOutQuint: function (t:number) { return 1+(--t)*t*t*t*t },
-	// acceleration until halfway, then deceleration 
-	easeInOutQuint: function (t:number) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
-  }
-
-
