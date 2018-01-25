@@ -114,7 +114,7 @@ class Controller {
             el.style.top = -v.z * 25 + 48 + 'vw';
         }
         element.ontouchmove = (ev:TouchEvent) => {
-            for (let i in ev.touches) {
+            for (let i = 0; i < ev.touches.length; i++) {
                 let t = ev.touches[i];
                 let el1 = <HTMLDivElement>t.target;
                 if (el1 === element)
@@ -128,8 +128,8 @@ class Controller {
             }
         }
         element.ontouchend = (ev:TouchEvent) => {
-            for (let i in ev.changedTouches) {
-                let t = ev.touches[i];
+            for (let i = 0; i < ev.changedTouches.length; i++) {
+                let t = ev.changedTouches[i];
                 let el2 = <HTMLDivElement>t.target;
                 if (el2 === element)
                     continue;
