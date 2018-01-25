@@ -366,19 +366,24 @@ export class Marionette {
     grabRope(rope:string, v:Vec3) {
         let l = 0;
         let d = v.length();
-        //v.x = -v.x;
-        let a = 30 * Math.PI/180;
-        v.mul(Math.cos(a))
-        v.y = -Math.sin(a)*d;
         let n = this.assembly.nodeIndex[rope];
-        for(let i = 0; i<30; i++) {
+        let ni = 0;
+        let md = 0;
+        for(let i = 0; i<29; i++) {
             let n1 = this.assembly.nodeIndex['rope'+rope+i.toString()];
             n1.free = true;
             if (l<d) {
-                l += n.pos.distance(n1.pos);
+                md = n.pos.distance(n1.pos);
+                l += md;
                 n = n1;
+                ni = i;
             }
         }
+        v.mul(d/l);
+        let a = (90 - ni * 2) * Math.PI/180;
+        v.mul(Math.cos(a))
+        v.y = -Math.sin(a)*l;
+
         n.free = false;
         n.pos = new Vec3().copy(this.assembly.nodeIndex[rope].pos).add(v);
     }
