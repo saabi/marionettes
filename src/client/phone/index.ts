@@ -106,7 +106,11 @@ class Controller {
             el.style.left = -v.x * 25 + 44 + 'vw';
             el.style.top = -v.z * 25 + 44 + 'vw';
         }
+        element.ontouchstart = (ev:TouchEvent) => {
+            ev.preventDefault();
+        }
         element.ontouchmove = (ev:TouchEvent) => {
+            ev.preventDefault();
             for (let i = 0; i < ev.touches.length; i++) {
                 let t = ev.touches[i];
                 let el1 = <HTMLDivElement>t.target;
@@ -121,6 +125,7 @@ class Controller {
             }
         }
         element.ontouchend = (ev:TouchEvent) => {
+            ev.preventDefault();
             for (let i = 0; i < ev.changedTouches.length; i++) {
                 let t = ev.changedTouches[i];
                 let el2 = <HTMLDivElement>t.target;
