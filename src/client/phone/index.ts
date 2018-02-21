@@ -37,8 +37,8 @@ class Device {
             var beta = event.beta!;
             var gamma = event.gamma!;
             this.absolute = absolute;
-            this.rot.x = alpha;
-            this.rot.y = beta;
+            this.rot.x = -alpha;
+            this.rot.y = -beta;
             this.rot.z = gamma;
             target.setRotation(this.rot.x, this.rot.y, this.rot.z);
             rotDisplay.innerText = absolute?'abs-' : 'rel-' + (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
@@ -52,9 +52,9 @@ class Device {
             da.z = a.z!;
             var dd = this.drift;
             let rounder = this.rounder;
-            var fax = -Math.round(rounder * (da.x - dd.x)) / rounder;
+            var fax = Math.round(rounder * (da.x - dd.x)) / rounder;
             var fay = Math.round(rounder * (da.y - dd.y)) / rounder;
-            var faz = -Math.round(rounder * (da.z - dd.z)) / rounder;
+            var faz = Math.round(rounder * (da.z - dd.z)) / rounder;
             target.accelerate(fax, fay, faz);
 
             var daa = this.avgacc;

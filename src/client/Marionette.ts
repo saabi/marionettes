@@ -337,7 +337,7 @@ export class Marionette {
         let p = EasingFunctions.easeInOutCubic(phase)
     
         thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
-        thing.setRotation(-motion.rot.x, -motion.rot.z, -motion.rot.y)
+        thing.setRotation(motion.rot.x, motion.rot.z, motion.rot.y)
         thing.update();
     
         var pos = thing.pos;
