@@ -49,15 +49,9 @@ export namespace Renderer {
     const sphereGeom = gl.drawable(gl.sphere(1, 36));
     const tubeGeom = gl.drawable(gl.cylinder(1, 36));
 
-    const pointer = new Pointer(canvas);
-    var camDist = 10;
-
     // set
     export function setLight(v: Vec3) {
         light.set(v.x, v.y, v.z);
-    }
-    export function setCamDist(d: number) {
-        camDist = d;
     }
     // draw
     export function drawNode(node: Node, shader: Shader) {
@@ -113,9 +107,6 @@ export namespace Renderer {
             far: 100
         });
 
-        // mouse pointer
-        pointer.z = Math.min(Math.max(pointer.z, 3), 21);
-        camDist += 0.1 * ((pointer.z / 3) - camDist);
         camView
             .ident()
             .trans(camera.x, camera.y, camera.z);
