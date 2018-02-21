@@ -353,7 +353,7 @@ export class Marionette {
             this.freeRope(n);
             if (motion.pulls !== undefined && (n in motion.pulls)) {
                 let fv = motion.pulls[n];
-                this.grabRope(n, new Vec3(fv.x, fv.y, fv.z));
+                this.grabRope(n, new Vec3(fv.x, fv.y, fv.z), r);
             }
         }    
     }
@@ -363,7 +363,12 @@ export class Marionette {
             n1.free = true;
         }
     }
-    grabRope(rope:string, v:Vec3) {
+    grabRope(rope:string, v:Vec3, rot: Vec3) {
+        let mat = new Mat4();
+        mat.rotatey(-rot.x);
+        mat.rotatez(rot.y);
+		mat.rotatex(rot.z);
+		v.transformMat4(v, mat)
         let l = 0;
         let d = v.length();
         let n = this.assembly.nodeIndex[rope];
