@@ -20,8 +20,8 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (err) {
-    this.status = err.status || err.cause.status || 500;
-    this.body = err.message || err;
+    ctx.response.status = err.status || err.cause.status || 500;
+    ctx.response.body = err.message || err;
     ctx.app.emit('error', err, ctx);
   }
 });

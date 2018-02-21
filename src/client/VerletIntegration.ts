@@ -8,14 +8,16 @@ export interface NodeParams {
 	y: number;
 	z: number;
 	w: number;
-	mass?: number;
 	color: number[];
-	id?: Node;
+	mass: number | null;
 	free?: boolean;
+	id?: Node;
 }
+type ConstraintParams = [string, string, number, number] | [string, string, number];
+
 export interface AssemblyParams {
 	nodes: { [name: string]: NodeParams };
-	constraints: any[];
+	constraints: ConstraintParams[];
 }
 
 // Node class
@@ -38,7 +40,7 @@ export class Node {
 		this.radius = Math.pow(node.w, 1 / 3) / 15;
 		this.mass = node.mass || 1.0;
 		this.rgb = new Vec3(node.color[0], node.color[1], node.color[2]);
-		this.free = ('free' in node) ? node.free : true;
+		this.free = ('free' in node) ? node.free as boolean : true;
 	}
 	// verlet integration
 	integrate(dt: number) {
@@ -123,10 +125,10 @@ export class Assembly {
 		// define constraints
 		for (let i = 0; i < struct.constraints.length; i++) {
 			this.constraints.push(new Constraint(
-				struct.nodes[struct.constraints[i][0]].id,
-				struct.nodes[struct.constraints[i][1]].id,
+				struct.nodes[struct.constraints[i][0]].id!,
+				struct.nodes[struct.constraints[i][1]].id!,
 				struct.constraints[i][2],
-				struct.constraints[i][3]
+				struct.constraints[i][3] as number | undefined || 0.5
             ));
         }
     }

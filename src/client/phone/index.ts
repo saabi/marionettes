@@ -19,9 +19,9 @@ class Device {
     rounder: number;
 
     constructor(target: MotionData) {
-        var avgaccDisplay = document.getElementById('avgacc');
-        var accDisplay = document.getElementById('acc');
-        var rotDisplay = document.getElementById('rot');
+        var avgaccDisplay = document.getElementById('avgacc')!;
+        var accDisplay = document.getElementById('acc')!;
+        var rotDisplay = document.getElementById('rot')!;
 
         this.acc = { x: 0, y: 0, z: 0 };
         this.avgacc = { x: 0, y: 0, z: 0 };
@@ -33,9 +33,9 @@ class Device {
 
         let handleOrientation = (event: DeviceOrientationEvent) => {
             var absolute = event.absolute;
-            var alpha = event.alpha;
-            var beta = event.beta;
-            var gamma = event.gamma;
+            var alpha = event.alpha!;
+            var beta = event.beta!;
+            var gamma = event.gamma!;
             this.absolute = absolute;
             this.rot.x = alpha;
             this.rot.y = beta;
@@ -45,11 +45,11 @@ class Device {
         }
 
         let handleMotion = (event: DeviceMotionEvent) => {
-            var a = event.acceleration;
+            var a = event.acceleration!;
             var da = this.acc;
-            da.x = a.x;
-            da.y = a.y;
-            da.z = a.z;
+            da.x = a.x!;
+            da.y = a.y!;
+            da.z = a.z!;
             var dd = this.drift;
             let rounder = this.rounder;
             var fax = -Math.round(rounder * (da.x - dd.x)) / rounder;
@@ -58,9 +58,9 @@ class Device {
             target.accelerate(fax, fay, faz);
 
             var daa = this.avgacc;
-            daa.x = daa.x * 0.99 + a.x * 0.01;
-            daa.y = daa.y * 0.99 + a.y * 0.01;
-            daa.z = daa.z * 0.99 + a.z * 0.01;
+            daa.x = daa.x * 0.99 + da.x * 0.01;
+            daa.y = daa.y * 0.99 + da.y * 0.01;
+            daa.z = daa.z * 0.99 + da.z * 0.01;
 
             accDisplay.innerText = (fax).toFixed(5) + ', ' + (fay).toFixed(5) + ', ' + (faz).toFixed(5);
             avgaccDisplay.innerText = (daa.x - dd.x).toFixed(5) + ', ' + (daa.y - dd.y).toFixed(5) + ', ' + (daa.z - dd.z).toFixed(5);
@@ -140,7 +140,7 @@ var phone = new Device(data);
 var originOrientation = {x:0,y:0,z:0};
 //let element = document.getElementById('thing');
 
-let resetButton = document.getElementById('resetButton');
+let resetButton = document.getElementById('resetButton')!;
 resetButton.onclick = () => {
     originOrientation = {x: phone.rot.x, y: phone.rot.y, z: phone.rot.z };
 }
@@ -168,5 +168,5 @@ function update() {
     //element.style.transform = s;
 }
 
-new Controller(document.getElementById('controller'));
+new Controller(document.getElementById('controller')!);
 setInterval(update, 16);

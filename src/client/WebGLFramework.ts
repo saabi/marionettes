@@ -22,11 +22,14 @@ export class Canvas {
 	width: number;
 	height: number;
 
-	bfs: HTMLButtonElement;
+	bfs?: HTMLButtonElement;
 
 	constructor(container: string) {
-
-		this.elem = <HTMLCanvasElement>document.getElementById(container);
+		const elem = document.getElementById(container);
+		if (elem && elem.tagName == 'CANVAS')
+			this.elem = <HTMLCanvasElement>elem;
+		else
+			throw new Error('Not a Canvas element!');
 		this.width = 0;
 		this.height = 0;
 
@@ -42,7 +45,7 @@ export class Canvas {
 		) {
 			this.bfs = document.createElement("button");
 			this.bfs.appendChild(document.createTextNode("Fullscreen"));
-			this.elem.parentElement.appendChild(this.bfs);
+			this.elem.parentElement!.appendChild(this.bfs);
 			for (let s in style) this.bfs.style.setProperty(s, style[s]);
 			this.bfs.addEventListener('click', e => {
 				e.preventDefault();
@@ -151,8 +154,8 @@ export class Pointer {
 
 export interface VertexUnit {
 	enabled: boolean;
-	drawable: Drawable;
-	idx: number;
+	drawable: Drawable | null;
+	idx: number | null;
 }
 
 export class WebGL {
@@ -164,14 +167,15 @@ export class WebGL {
 	aspect: number;
 	//textureUnits: [];
 	vertexUnits: VertexUnit[];
-	currentShader: Shader;
+	currentShader: Shader | null = null;
 
 	constructor(canvas: Canvas, options?: any) {
 
 		this.canvas = canvas;
-		this.gl = this.canvas.elem.getContext("webgl", options);
-		if (!this.gl) this.gl = this.canvas.elem.getContext("experimental-webgl", options);
-		if (!this.gl) throw new Error('This browser does not support WebGL');
+		let gl = this.canvas.elem.getContext("webgl", options);
+		if (!gl) gl = this.canvas.elem.getContext("experimental-webgl", options);
+		if (!gl) throw new Error('This browser does not support WebGL');
+		this.gl = gl;
 		this.width = 0;
 		this.height = 0;
 		this.aspect = 0;
@@ -545,9 +549,15 @@ export class Shader {
 
 		this.webGL = webGL;
 		this.gl = webGL.gl;
-		this.program = this.gl.createProgram();
-		this.vs = this.gl.createShader(this.gl.VERTEX_SHADER);
-		this.fs = this.gl.createShader(this.gl.FRAGMENT_SHADER);
+		const program = this.gl.createProgram(); 
+		if (!program) throw new Error('Program failed to compile.');
+		this.program = program;
+		const vs = this.gl.createShader(this.gl.VERTEX_SHADER);
+		if (!vs) throw new Error('Shader failed to compile.');
+		this.vs = vs;
+		const fs = this.gl.createShader(this.gl.FRAGMENT_SHADER);
+		if (!fs) throw new Error('Shader failed to compile.');
+		this.fs = fs;		
 		this.gl.attachShader(this.program, this.vs);
 		this.gl.attachShader(this.program, this.fs);
 		this.compileShader(this.vs, shaders.vertex);
@@ -576,7 +586,7 @@ export class Shader {
 		this.gl.shaderSource(shader, boilerplate + '\n' + source);
 		this.gl.compileShader(shader);
 		if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-			throw new Error(this.gl.getShaderInfoLog(shader));
+			throw new Error(this.gl.getShaderInfoLog(shader) || "Unknown error.");
 		}
 
 	}
@@ -595,7 +605,9 @@ export class Shader {
 
 		let location = this.uniformCache[name];
 		if (location === void 0) {
-			location = this.uniformCache[name] = this.gl.getUniformLocation(this.program, name);
+			const l = this.gl.getUniformLocation(this.program, name);
+			if (!l) throw new Error('Uniform location not found.')
+			location = this.uniformCache[name] = l;
 		}
 		return location;
 
@@ -605,7 +617,7 @@ export class Shader {
 
 		this.gl.linkProgram(this.program);
 		if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
-			throw new Error(this.gl.getProgramInfoLog(this.program));
+			throw new Error(this.gl.getProgramInfoLog(this.program) || "Unknown error.");
 		}
 
 	}
@@ -733,14 +745,16 @@ export class Drawable {
 	buffer: WebGLBuffer;
 	mode: number;
 	vertexSize: number;
-	size: number;
+	size: number = 0;
 
 	constructor(webGL: WebGL, obj: Geometry) {
 
 		this.pointers = obj.pointers;
 		this.webGL = webGL;
 		this.gl = webGL.gl;
-		this.buffer = this.gl.createBuffer();
+		const buffer = this.gl.createBuffer();
+		if (!buffer) throw new Error("Error");
+		this.buffer = buffer;
 		this.mode = this.gl.TRIANGLES;
 		this.vertexSize = obj.vertexSize;
 		this.upload(new Float32Array(obj.vertices));
