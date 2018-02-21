@@ -1,6 +1,6 @@
 {
   "name": "marionettes.ferreyrapons.com",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "WebSockets / WebGL / UI Demo",
   "main": "server.js",
   "scripts": {
@@ -9,24 +9,23 @@
   },
   "author": "Sebastian Ferreyra",
   "dependencies": {
-    "@types/koa": "^2.0.39",
-    "@types/koa-bodyparser": "^3.0.23",
-    "@types/koa-mount": "^2.0.18",
-    "@types/koa-router": "^7.0.22",
-    "@types/koa-static": "^4.0.0",
-    "@types/socket.io": "^1.4.29",
-    "@types/socket.io-client": "^1.4.29",
-    "history": "^4.7.2",
     "koa": "^2.2.0",
-    "koa-add-trailing-slashes": "^1.1.0",
+    "koa-add-trailing-slashes": "^2.0.1",
     "koa-bodyparser": "^4.2.0",
     "koa-convert": "^1.2.0",
     "koa-mount": "^3.0.0",
     "koa-router": "^7.1.1",
     "koa-socket": "^4.4.0",
-    "koa-static": "^4.0.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-router": "^4.2.0"
+    "koa-static": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.39",
+    "@types/koa-bodyparser": "^4.2.0",
+    "@types/koa-mount": "^3.0.1",
+    "@types/koa-router": "^7.0.22",
+    "@types/koa-static": "^4.0.0",
+    "@types/socket.io": "^1.4.29",
+    "@types/socket.io-client": "^1.4.29",
+    "@types/w3c-generic-sensor": "^1.0.0"
   }
 }
