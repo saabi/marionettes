@@ -16,9 +16,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowJs": true
   },
   "files": [
+    "../../../node_modules/quaternion/quaternion.js",
     "index.ts"
   ]
 }
