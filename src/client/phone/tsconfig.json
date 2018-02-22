@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES5",
+    "lib": ["es2017", "dom"],
     "module": "amd",
-    /* "allowJs": true, */  
     "outFile": "../../../public/js/phone.js",
     "pretty": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "diagnostics": true,
+    "listFiles": false,
+    "listEmittedFiles": true,
+    "locale": "en-us",
     "removeComments": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
