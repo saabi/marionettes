@@ -18,7 +18,7 @@ class Device {
     absolute: boolean;
     rounder: number;
 
-    constructor(target: MotionData) {
+    constructor() {
         var avgaccDisplay = document.getElementById('avgacc')!;
         var accDisplay = document.getElementById('acc')!;
         var rotDisplay = document.getElementById('rot')!;
@@ -40,7 +40,6 @@ class Device {
             this.rot.x = -alpha;
             this.rot.y = -beta;
             this.rot.z = gamma;
-            target.setRotation(this.rot.x, this.rot.y, this.rot.z);
             rotDisplay.innerText = absolute?'abs-' : 'rel-' + (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
         }
 
@@ -55,7 +54,6 @@ class Device {
             var fax = Math.round(rounder * (da.x - dd.x)) / rounder;
             var fay = Math.round(rounder * (da.y - dd.y)) / rounder;
             var faz = Math.round(rounder * (da.z - dd.z)) / rounder;
-            target.accelerate(fax, fay, faz);
 
             var daa = this.avgacc;
             daa.x = daa.x * 0.99 + da.x * 0.01;
@@ -70,9 +68,6 @@ class Device {
             this.drift.x = this.avgacc.x;
             this.drift.y = this.avgacc.y;
             this.drift.z = this.avgacc.z;
-            target.damping = .99;
-            target.centerAttraction = 0.0001;
-            target.reset();
         }
         window.addEventListener("deviceorientation", handleOrientation, true);
         window.addEventListener("devicemotion", handleMotion, true);
@@ -141,7 +136,7 @@ class Controller {
 }
 
 var data = new MotionData();
-var phone = new Device(data);
+var phone = new Device();
 var originOrientation = {x:0,y:0,z:0};
 //let element = document.getElementById('thing');
 
@@ -156,8 +151,6 @@ socket.on('connect', () => {
 });
 
 function update() {
-    data.update();
-
     let rot = {x: phone.rot.x - originOrientation.x, y: phone.rot.y - originOrientation.y, z: phone.rot.z - originOrientation.z }
     var message = {
         acc: phone.acc,
@@ -165,12 +158,6 @@ function update() {
         pulls: stringPulls
     }
     socket.emit('message', message);
-
-    var p = data.pos;
-    var r = data.rot;
-
-    //var s = 'rotateX(' + r.y + 'deg) rotateY(' + -r.z + 'deg) rotateZ(' + r.x + 'deg) translate3d(' + p.x + 'px,' + p.y + 'px,' + p.z + 'px)';
-    //element.style.transform = s;
 }
 
 new Controller(document.getElementById('controller')!);
