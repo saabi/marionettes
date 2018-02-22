@@ -4,6 +4,7 @@ export class MotionData {
     pos = new Vec3;
     vel = new Vec3;
     rot = new Vec3;
+    quaternion = [0,0,0,0];
     damping = 0.8;
     centerAttraction = 0.02;
 
@@ -22,6 +23,9 @@ export class MotionData {
         this.rot.x = x;
         this.rot.y = y;
         this.rot.z = z;
+    }
+    setQuaternion(q: [number, number, number, number]) {
+        this.quaternion = q;
     }
     getPosition() {
         var p = this.pos;

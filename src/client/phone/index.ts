@@ -1,6 +1,8 @@
 import { MotionData } from 'MotionData';
 import * as io from 'socket.io-client';
-import {Vec3} from 'VecMath';
+import { Vec3 } from 'VecMath';
+
+///<reference path='.../w3c-generic-sensor' />
 
 interface Vec {
     x: number;
@@ -14,6 +16,7 @@ class Device {
     accacc: Vec;
     avgacc: Vec;
     rot: Vec;
+    quaternion: [number, number, number, number];
     drift: Vec;
     absolute: boolean;
     rounder: number;
@@ -27,6 +30,7 @@ class Device {
         this.avgacc = { x: 0, y: 0, z: 0 };
         this.drift = { x: 0, y: 0, z: 0 };
         this.rot = { x: 0, y: 0, z: 0 };
+        this.quaternion = [0,0,0,0];
         this.accacc = { x: 0, y: 0, z: 0 };
         this.absolute = true;
         this.rounder = 10000;
@@ -41,6 +45,10 @@ class Device {
             this.rot.y = -beta;
             this.rot.z = gamma;
             rotDisplay.innerText = absolute?'abs-' : 'rel-' + (alpha).toFixed(5) + ', ' + (beta).toFixed(5) + ', ' + (gamma).toFixed(5);
+        }
+        
+        let handleOrientation2 = (event: Event) => {
+            this.quaternion = sensor.quaternion!;
         }
 
         let handleMotion = (event: DeviceMotionEvent) => {
@@ -69,6 +77,9 @@ class Device {
             this.drift.y = this.avgacc.y;
             this.drift.z = this.avgacc.z;
         }
+        const sensor = new AbsoluteOrientationSensor();
+        sensor.addEventListener('reading', handleOrientation2);
+        sensor.start();
         window.addEventListener("deviceorientation", handleOrientation, true);
         window.addEventListener("devicemotion", handleMotion, true);
         //window.addEventListener("touchend", handleTouch, true);
@@ -132,7 +143,7 @@ class Controller {
                 delete stringPulls[el2.id];
             }
         }
-}
+    }
 }
 
 var data = new MotionData();
@@ -155,6 +166,7 @@ function update() {
     var message = {
         acc: phone.acc,
         rot: rot,
+        quaternion: phone.quaternion,
         pulls: stringPulls
     }
     socket.emit('message', message);

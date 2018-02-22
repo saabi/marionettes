@@ -122,6 +122,17 @@ export class Mat4 {
 
 	}
 
+	static fromArray(a: number[]) {
+		const mat = new Mat4();
+		if (a.length !== 16)
+			throw new Error('Wrong array size!');
+		
+		for (let i = 0; i < mat.data.length; i++) {
+			mat.data[i] = a[i];
+		}
+		return mat;
+	}
+
 	ident() {
 
 		const d = this.data;

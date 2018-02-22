@@ -2,6 +2,9 @@ import { MotionData } from './MotionData';
 import { AssemblyParams, Assembly } from './VerletIntegration';
 import { Vec3, Mat4 } from './VecMath';
 
+const Quaternion = require('quaternion');
+
+
 const controllerCenter = new Vec3(0, 1.5, 0);
 const controllerVectors = {
 	clefta: new Vec3(-1,0,0),
@@ -336,8 +339,9 @@ export class Marionette {
         phase = 1;
         let p = EasingFunctions.easeInOutCubic(phase)
     
-        thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)
-        thing.setRotation(motion.rot.x, motion.rot.z, motion.rot.y)
+        thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z);
+        thing.setRotation(motion.rot.x, motion.rot.z, motion.rot.y);
+        thing.setQuaternion(motion.quaternion);
         thing.update();
     
         var pos = thing.pos;
@@ -347,13 +351,14 @@ export class Marionette {
             origin.z * (1-p) + target.z * p + controllerCenter.z + pos.y/100
         );
         var r = thing.rot;
-        this.positionController(controllerVectors, p1, r);
+        var m = Mat4.fromArray( new Quaternion(thing.quaternion).toMatrix4() as number[]);
+        this.positionController(controllerVectors, p1, m);
         for (let i in this.ropes) {
             let n = this.ropes[i];
             this.freeRope(n);
             if (motion.pulls !== undefined && (n in motion.pulls)) {
                 let fv = motion.pulls[n];
-                this.grabRope(n, new Vec3(fv.x, fv.y, fv.z), r);
+                this.grabRope(n, new Vec3(fv.x, fv.y, fv.z), m);
             }
         }    
     }
@@ -363,12 +368,12 @@ export class Marionette {
             n1.free = true;
         }
     }
-    grabRope(rope:string, v:Vec3, rot: Vec3) {
-        let mat = new Mat4();
+    grabRope(rope:string, v:Vec3, mat: Mat4) {
+        /*let mat = new Mat4();
         mat.rotatey(-rot.x);
         mat.rotatez(rot.y);
-		mat.rotatex(rot.z);
-		v.transformMat4(v, mat)
+        mat.rotatex(rot.z);*/
+        v.transformMat4(v, mat)
         let l = 0;
         let d = v.length();
         let n = this.assembly.nodeIndex[rope];
@@ -392,13 +397,14 @@ export class Marionette {
         n.free = false;
         n.pos = new Vec3().copy(this.assembly.nodeIndex[rope].pos).add(v);
     }
-    positionController(vectors:any, pos: Vec3, rot: Vec3) {
+    positionController(vectors:any, pos: Vec3, rotMat: Mat4) {
         let mapping = this.controllerMapping;
         let mat = new Mat4();
         mat.trans(pos.x, pos.y, pos.z);
-        mat.rotatey(-rot.x);
+        /*mat.rotatey(-rot.x);
         mat.rotatez(rot.y);
-        mat.rotatex(rot.z);
+        mat.rotatex(rot.z);*/
+        mat.multiply(mat, rotMat);
         for (let n in vectors) {
             let v = <Vec3>vectors[n];
             let p = this.assembly.nodes[mapping[n]].pos
