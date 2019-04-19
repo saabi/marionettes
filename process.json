@@ -1,9 +1,9 @@
 {
-	apps : [{
-		name : 'marionettes',
-		script : 'lib/server.js',
-		watch : false,
-                env : {
+	"apps" : [{
+		"name" : "marionettes",
+		"script" : "lib/server.js",
+		"watch" : false,
+                "env" : {
                         "PORT" : "3021"
                 }
 	}]
