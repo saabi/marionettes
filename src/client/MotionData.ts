@@ -5,7 +5,7 @@ export class MotionData {
     vel = new Vec3;
     rot = new Vec3;
     damping = 0.8;
-    centerAttraction = 0.02;
+    centerAttraction = 0.003;
 
     accelerate(ax: number, ay: number, az: number) {
         var v = this.vel;

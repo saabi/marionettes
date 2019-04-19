@@ -52,7 +52,6 @@ export class Vec3 {
 		this.z *= v;
 		return this;
 	}
-
 	length () {
 		const dx = this.x;
 		const dy = this.y;
@@ -64,6 +63,10 @@ export class Vec3 {
 		const dy = b.y - this.y;
 		const dz = b.z - this.z;
 		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+	normalize() {
+		const l = this.length();
+		return this.mul(1/l);	
 	}
 
 	transformMat4(v: Vec3, mat: Mat4) {

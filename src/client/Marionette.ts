@@ -324,7 +324,6 @@ export class Marionette {
             if (ns[i].name in this.controllerMapping)
             this.controllerMapping[ns[i].name] = i;
         }
-        
     }
 
     update(motion:any) {
@@ -333,7 +332,7 @@ export class Marionette {
         let target = this.target;
         let phase = this.lifeTime/3;
         if (phase >1) 
-        phase = 1;
+        	phase = 1;
         let p = EasingFunctions.easeInOutCubic(phase)
     
         thing.accelerate(motion.acc.x, motion.acc.y, motion.acc.z)

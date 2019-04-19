@@ -1,9 +1,0 @@
-echo 'Compiling server code...'
-tsc -p src/server
-echo 'Compiling client code...'
-tsc -p src/client/index
-tsc -p src/client/phone
-echo 'Building production files...'
-r.js -o src/client/index/app.build.js
-r.js -o src/client/phone/app.build.js
-echo 'Done!'

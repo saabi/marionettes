@@ -1,7 +1,7 @@
-import * as io from 'socket.io-client';
-import { Vec3, Mat4 } from 'VecMath';
-import { Renderer, AssemblyList } from 'Renderer';
-import { Marionette } from 'Marionette';
+//import * as io from 'socket.io-client';
+import { Vec3 } from '../VecMath';
+import { Renderer, AssemblyList } from '../Renderer';
+import { Marionette } from '../Marionette';
 
 interface MarionetteList {
 	[id: string]: Marionette;
@@ -14,10 +14,12 @@ interface PhoneAddedMessage {
 let marionettes: MarionetteList = {};
 const assemblies: AssemblyList = {};
 
+/*
 function left(width: number, count: number, index: number) {
 	let mid = width / count / 2;
 	return mid + index * width / count;
 }
+*/
 function addMarionette(msg: PhoneAddedMessage) {
 	console.log(`phone added: ${msg.id} - ${msg.slot}`);
 	let id = msg.id;

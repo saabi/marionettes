@@ -1,0 +1,14 @@
+body{
+    touch-action: none;
+
+    position: absolute;
+
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    
+    overflow: hidden;
+    
+    perspective-origin: 50% 50%;
+    perspective: 500px;
+}

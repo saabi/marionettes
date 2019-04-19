@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+      "target": "ES2017",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "lib": ["es2015", "es2016", "es2017", "dom"],
+      "pretty": true,
+      "strict": true,
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "alwaysStrict": true,
+      "diagnostics": true,
+      "listFiles": true,
+      "listEmittedFiles": true,
+      "strictNullChecks": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "noFallthroughCasesInSwitch": true,
+      "sourceMap": true,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src/**/*.ts"]
+}
